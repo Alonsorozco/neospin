@@ -1,0 +1,115 @@
+body {
+    background: linear-gradient(135deg, #0d0d0d, #1a1a2e, #0f0f3d);
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .navbar {
+    background: #0f0f3d;
+    box-shadow: 0 0 25px #00f0ff88;
+    border-bottom: 2px solid #00f0ff66;
+  }
+
+  .navbar-brand {
+    font-size: 1.8rem;
+    background: linear-gradient(90deg, #00f0ff, #00ffcc, #0088ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowBrand 3s infinite linear;
+  }
+
+  @keyframes glowBrand {
+    0% { filter: drop-shadow(0 0 5px #00f0ff); }
+    50% { filter: drop-shadow(0 0 15px #00ffff); }
+    100% { filter: drop-shadow(0 0 5px #00f0ff); }
+  }
+
+  .nav-link {
+    color: #d0faff !important;
+    text-transform: uppercase;
+    margin-left: 1rem;
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #00f0ff;
+    bottom: 0;
+    left: 0;
+    transition: 0.3s;
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 4rem;
+    color: #00f0ff;
+    margin-top: 100px;
+    text-shadow: 0 0 20px #00f0ffaa;
+    letter-spacing: 5px;
+  }
+
+  .card {
+    background: rgba(14, 14, 30, 0.9);
+    border: 2px solid #00f0ff44;
+    box-shadow: 0 0 20px #00f0ff66;
+    color: #fff;
+    border-radius: 15px;
+    margin: 2rem auto;
+    max-width: 500px;
+  }
+
+  .status-tag {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #00ffff;
+    color: #000;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 0 10px #00ffff;
+  }
+
+  .btn-custom {
+    background: #00f0ff;
+    color: #000;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #00f0ff;
+  }
+
+  .btn-custom:hover {
+    background: #00c6ff;
+    box-shadow: 0 0 25px #00eaff;
+    transform: scale(1.05);
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #0dcaf0;
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 576px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    .navbar-brand {
+      font-size: 1.3rem;
+    }
+  }
