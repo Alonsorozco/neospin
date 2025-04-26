@@ -525,6 +525,7 @@ setTimeout(() => {
     selectedNumbers = [];
     isQuickBet = false;
     selectedBets = {};
+    quickBetRefunded = false;
   
     // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
     partidasJugadas++;
@@ -1256,14 +1257,19 @@ function resetBetState({ refund = true } = {}) {
   });
 
   // Calcular el monto a reembolsar
+  // Calcular el monto a reembolsar
   if (isQuickBet) {
     // Solo se reembolsa el costo de la apuesta rápida si no ha sido reembolsado ya
     if (quickBetPending && !quickBetRefunded) {
-      refundAmount += previousQuickBetCost;
+      refundAmount += previousQuickBetCost;  // Se suma el costo de la apuesta rápida
       quickBetRefunded = true;
     }
+  } else if (manualBetPending) {
+    // Si hay una apuesta manual pendiente, reembolsar su costo
+    refundAmount += previousManualBetCost;
+    manualBetPending = false;  // Marcar como no pendiente
   } else {
-    // Se reembolsa lo apostado en cada número
+    // Reembolsar lo apostado en cada número
     for (const num in selectedBets) {
       refundAmount += selectedBets[num];
     }
@@ -1278,13 +1284,15 @@ function resetBetState({ refund = true } = {}) {
     showCancelBetModal(refundAmount);
   }
 
- // Limpiar estado de apuestas previas
- selectedNumbers = [];  // Limpiar los números seleccionados
- selectedBets = {};  // Limpiar las apuestas previas
- quickBetPending = false;  // Apuesta rápida no pendiente
- wasBetConfirmed = false;  // No ha sido confirmada la apuesta
- isQuickBet = false;  // No estamos en apuesta rápida
- previousQuickBetCost = 0;  // Reiniciar el costo de la apuesta rápida
+  // Limpiar estado de apuestas previas
+  selectedNumbers = [];  // Limpiar los números seleccionados
+  selectedBets = {};  // Limpiar las apuestas previas
+  quickBetPending = false;  // Apuesta rápida no pendiente
+  wasBetConfirmed = false;  // No ha sido confirmada la apuesta
+  isQuickBet = false;  // No estamos en apuesta rápida
+  previousQuickBetCost = 0;  // Reiniciar el costo de la apuesta rápida
+  previousManualBetCost = 0;  // Reiniciar el costo de la apuesta manual
+  manualBetPending = false;  // Apuesta manual no pendiente
   // Reiniciar bandera del reembolso para futuras rondas
    // Limpiar la interfaz visual de los botones
    document.querySelectorAll('.numero-btn').forEach(button => {
@@ -1321,7 +1329,7 @@ function updateAllUniqueSymbolCounts() {
 
   countEls.forEach(el => {
     if (el) el.textContent = uniqueCount;
-  });
+  }); 
 
   const msgEl = document.getElementById('completionMessage');
   if (msgEl) {
