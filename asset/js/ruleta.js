@@ -531,7 +531,7 @@ setTimeout(() => {
     partidasJugadas++;
     updateGiftProgressBar();
   
-    if (partidasJugadas % 10 === 0) {
+    if (partidasJugadas % 15 === 0) {
       const simbolos = Object.keys(symbolValues);
       const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
       const valor = symbolValues[simboloRegalado];
@@ -539,11 +539,11 @@ setTimeout(() => {
       ownedSymbols.push(simboloRegalado); // Añadir al inventario
       saveToStorage();                   // Guardar
       updateInventory();                // Mostrar en pantalla
-
+      updateUniqueSymbolProgressBar()
       
   
       showPrizeModal(
-        `🎁 ¡Has jugado 10 partidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
+        `🎁 ¡Has Ganado un premio por partidas cumplidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
         simboloRegalado
 
     
@@ -629,22 +629,23 @@ function showNotification(message) {
   notificationModal.show();
 }
 
-// 1️⃣ Definición de la función de conmteo simbolo
+// 1️⃣ Definición de la función de conteo de símbolos
 function updateUniqueSymbolCount() {
   const uniqueCount = new Set(ownedSymbols).size;
   const countEl = document.getElementById('uniqueSymbolCount');
-  const msgEl   = document.getElementById('completionMessage');
+  const msgEl = document.getElementById('completionMessage');
 
   if (countEl) countEl.textContent = uniqueCount;
 
   if (msgEl) {
     if (uniqueCount === 36) {
-      msgEl.textContent = '¡Felicitaciones, Completaste los 36 Simbolos! 👏';
+      msgEl.textContent = '¡Felicitaciones, Completaste los 36 Símbolos! 👏';
     } else {
-      msgEl.textContent = '';  // limpia el mensaje si no son 36
+      msgEl.textContent = ''; // limpia el mensaje si no son 36
     }
   }
 }
+
 
 
 function updateDuplicateSymbolCount() {
@@ -653,7 +654,6 @@ function updateDuplicateSymbolCount() {
     symbolMap[sym] = (symbolMap[sym] || 0) + 1;
   });
 
-  // Calcular cantidad total de repetidos (más de 1 vez)
   let duplicateCount = 0;
   const repetidos = [];
 
@@ -667,12 +667,17 @@ function updateDuplicateSymbolCount() {
     }
   }
 
+  // Actualizar contador fuera
   const dupEl = document.getElementById('duplicateSymbolCount');
   if (dupEl) dupEl.textContent = duplicateCount;
 
-  loadOwnedSymbols();
+  // Actualizar contador dentro del inventario/modal
+  const modalDupEl = document.getElementById('modalDuplicateSymbolCount');
+  if (modalDupEl) modalDupEl.textContent = duplicateCount;
 
+  loadOwnedSymbols();
 }
+
 
 
 
@@ -745,6 +750,7 @@ inventoryModalEl.addEventListener('show.bs.modal', () => {
   updateDuplicateSymbolCount();
   updateSymbolSidebar(); 
   saveToStorage();
+  updateUniqueSymbolCount();
  
 });
 
@@ -823,7 +829,7 @@ function buySymbol(symbol, price) {
     // Actualizar la interfaz de usuario
     updateBalance();
     updateShopUI();
-
+    updateUniqueSymbolCount();
     
     // Si hay un modal o mensaje de resultado, ocultarlo
     $('#resultModal').modal('hide');
@@ -935,6 +941,8 @@ function loadOwnedSymbols() {
       ventaContent.appendChild(div);
     });
   }
+  updateUniqueSymbolCount(); // ← ya tenías esto
+  updateUniqueSymbolProgressBar(); // 👈 aquí también debes llamarlo
 }
 
 
@@ -1424,21 +1432,23 @@ document.querySelectorAll('.bet-btn').forEach(button => {
 });
 
 
-
 function updateGiftProgressBar() {
   const bar = document.getElementById('giftProgressBar');
-  const current = partidasJugadas % 10;
-  const percent = (current / 10) * 100;
+  const current = partidasJugadas % 15; // Cambio de 10 a 15 partidas
+  const percent = (current / 15) * 100; // Calcula el porcentaje según 15 partidas
 
+  // Actualiza el ancho de la barra en porcentaje
   bar.style.width = `${percent}%`;
-  bar.setAttribute('aria-valuenow', current);
-  bar.textContent = `${current} / 10`;
+  bar.setAttribute('aria-valuenow', percent);
 
-  // Opcional: cambia color si llega a 10
+  // Actualiza el texto dentro de la barra en porcentaje
+  bar.textContent = `${Math.round(percent)}%`;
+
+  // Opcional: cambia color si llega a 15 partidas
   if (current === 0 && partidasJugadas !== 0) {
     bar.classList.remove('bg-success');
     bar.classList.add('bg-warning');
-    bar.textContent = `¡Símbolo obtenido!`;
+    bar.textContent = `¡Símbolo obtenido!`; // Si llega a 15, muestra el mensaje
   } else {
     bar.classList.remove('bg-warning');
     bar.classList.add('bg-success');
@@ -1447,39 +1457,10 @@ function updateGiftProgressBar() {
 
 
 
-// Función para actualizar la barra de progreso
-function updateGiftProgress() {
-  const progressBar = document.getElementById('giftProgressBar');
-  const progressPercentage = (partidasJugadas % 10) * 10; // Cada 10 partidas, la barra se llena al 100%
-  progressBar.style.width = `${progressPercentage}%`;
-  progressBar.setAttribute('aria-valuenow', partidasJugadas % 10);
 
-  // Actualiza el texto dentro de la barra
-  progressBar.textContent = `${partidasJugadas % 10} / 10`;
 
-  // Verificar si llegó a 10 partidas
-  if (partidasJugadas % 10 === 0 && partidasJugadas !== 0) {
-    const regalo = "🎁"; // Símbolo de regalo
-    ownedSymbols.push(regalo); // Agregarlo al inventario
-    saveToStorage(); // Guardar en el almacenamiento local
-    updateInventory(); // Actualizar la visualización del inventario
-    showResultModal(`🎁 ¡Símbolo de regalo obtenido por jugar 10 partidas!`, regalo);
 
-    // 🌟 Animación de barra
-    progressBar.classList.add('gift-earned');
 
-    // ✨ Efecto sparkle visual
-    const sparkle = document.createElement('div');
-    sparkle.classList.add('sparkle');
-    document.getElementById('giftProgressContainer').appendChild(sparkle);
-
-    // Eliminar el efecto después de 1 segundo
-    setTimeout(() => {
-      sparkle.remove();
-      progressBar.classList.remove('gift-earned');
-    }, 1000);
-  }
-}
 
 
 
@@ -1526,5 +1507,82 @@ function showPrizeModal(message, simboloRegalado) {
 
     prizeModal.hide();
   });
+}
+
+
+
+let uniqueSymbols = 0; // símbolos únicos (encontrados + comprados sin repetir)
+
+function updateUniqueSymbolProgressBar() {
+  const bar = document.getElementById('uniqueSymbolProgressBar');
+  const current = ownedSymbols.length; // Usa el número de símbolos únicos o cualquier otra variable para el progreso
+  const total = 36; // Total de símbolos para completar
+  const percent = (current / total) * 100;
+
+  // Actualizar el ancho de la barra
+  bar.style.width = `${percent}%`;
+  bar.setAttribute('aria-valuenow', current);
+
+  // Cambiar el texto dentro de la barra para mostrar el porcentaje
+  bar.textContent = `${Math.round(percent)}%`;
+
+  // Cambiar las clases de la barra para aplicar diferentes gradientes
+  bar.classList.remove('low', 'medium', 'high'); // Eliminar las clases antiguas
+
+  // Aplicar clase nueva dependiendo del porcentaje
+  if (percent < 50) {
+    bar.classList.add('low'); // Rojo a naranja
+  } else if (percent < 75) {
+    bar.classList.add('medium'); // Naranja a amarillo
+  } else {
+    bar.classList.add('high'); // Amarillo a verde
+  }
+}
+
+
+
+
+
+
+// Variables globales
+let inventory = {
+  uniqueSymbols: 0,
+  symbolsFound: 0,
+  symbolsBought: 0
+};
+
+function updateUniqueSymbolCount() {
+  const uniqueCount = new Set(ownedSymbols).size;
+  
+  const countEl = document.getElementById('uniqueSymbolCount');           // contador fuera del modal
+  const modalCountEl = document.getElementById('modalUniqueSymbolCount'); // contador dentro del modal
+  const msgEl = document.getElementById('completionMessage');             // mensaje de felicitaciones
+  const progressBar = document.getElementById('uniqueSymbolProgressBar'); // barra de progreso
+
+  // Actualizar contadores
+  if (countEl) countEl.textContent = uniqueCount;
+  if (modalCountEl) modalCountEl.textContent = uniqueCount;
+
+  // Actualizar mensaje de finalización
+  if (msgEl) {
+    if (uniqueCount === 36) {
+      msgEl.textContent = '¡Felicitaciones, Completaste los 36 Símbolos! 👏';
+    } else {
+      msgEl.textContent = '';
+    }
+  }
+
+  // Actualizar la barra de progreso
+  if (progressBar) {
+    const progressPercent = (uniqueCount / 36) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+
+    // Cambiar color si completa
+    if (uniqueCount === 36) {
+      progressBar.style.backgroundColor = 'gold';
+    } else {
+      progressBar.style.backgroundColor = ''; // o ponerle tu color normal (ej: 'blue')
+    }
+  }
 }
 

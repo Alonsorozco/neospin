@@ -18,6 +18,13 @@
   <div id="symbol-box" class="symbol-box text-center">
     
      <P>Tus Simbolos</P>
+
+     <span class="badge bg-primary">
+      Únicos: <strong><span id="uniqueSymbolCount">0</span>/36</strong>
+    </span>
+    <span class="badge bg-warning text-dark">
+      Repetidos: <strong><span id="duplicateSymbolCount">0</span></strong>
+    </span>
      <div class="text-center mt-4 ">
       <button class="btn btn-warning btn-sobre-venta" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
     </div>
@@ -59,19 +66,29 @@
       </div>
     </div>
 
-    <div class="mt-3">
-      <label class="form-label">🎁 Avance para tu premio sorpresa</label>
-      <div class="progress" style="height: 25px;">
-        <div id="giftProgressBar" class="progress-bar bg-success" role="progressbar" 
-             style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="10">
-          0 / 10
+      <div class="mt-3">
+        <label class="form-label">🎁 Avance para tu premio sorpresa</label>
+        <div class="progress" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
+          <div id="giftProgressBar" class="progress-bar" role="progressbar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
+            0%
+          </div>
+        </div>
+      
+      
+      <label class="form-label">Avance para completar los 36 símbolos</label>
+      <div id="progress-container" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
+        <div id="uniqueSymbolProgressBar" class="custom-progress-bar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
+          0%
         </div>
       </div>
+      
+      
+
     </div>
     
 
      <div class="grid-container" id="grid-container">NEONSPIN</div>
-     <p>NEOSPIN 1.1.0 ©Fabian Salas 2025</p>
+     <p>NEONSPIN 1.1.0 NEONGAME ©Fabian Salas 2025</p>
  
   <!-- Modal de apuesta -->
   <div class="modal fade" tabindex="-1" id="betModal" data-backdrop="true">
@@ -155,11 +172,12 @@
         <!-- CONTADORES DE SÍMBOLOS -->
         <div class="d-flex justify-content-center gap-3 mb-3">
           <span class="badge bg-primary">
-            Únicos: <strong><span id="uniqueSymbolCount">0</span>/36</strong>
+            Únicos: <strong><span id="modalUniqueSymbolCount">0</span>/36</strong>
           </span>
           <span class="badge bg-warning text-dark">
-            Repetidos: <strong><span id="duplicateSymbolCount">0</span></strong>
+            Repetidos: <strong><span id="modalDuplicateSymbolCount">0</span></strong>
           </span>
+          
         </div>
 
         <!-- MENSAJE DE FELICITACIÓN -->

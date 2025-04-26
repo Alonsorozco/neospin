@@ -81,6 +81,36 @@ body {
   #grid-container[style*="pointer-events: none"] {
     opacity: 0.5;
   }
+
+  .progress-bar-container {
+    width: 100%;
+    height: 25px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4caf50;
+    transition: width 0.5s;
+    border-radius: 10px;
+  }
+
+  /* Colores personalizados para la barra de progreso */
+.custom-progress-bar.low {
+  background-color: red; /* Rojo para baja progresión */
+}
+
+.custom-progress-bar.medium {
+  background-color: orange; /* Naranja para progresión media */
+}
+
+.custom-progress-bar.high {
+  background-color: green; /* Verde para alta progresión */
+}
+
   
 /* Fondo animado para el contenedor de la cuadrícula */
 .grid-container {
@@ -111,6 +141,28 @@ body {
     background-position: 0% 50%;
   }
 }
+
+
+/* Barra de progreso personalizada */
+.custom-progress-bar {
+  background: linear-gradient(to right, red, yellow); /* Gradiente inicial */
+  transition: width 0.8s ease, background 0.8s ease;
+}
+
+/* Cambios de gradiente según el porcentaje */
+.custom-progress-bar.low {
+  background: linear-gradient(to right, red, orange);
+}
+
+.custom-progress-bar.medium {
+  background: linear-gradient(to right, orange, yellow);
+}
+
+.custom-progress-bar.high {
+  background: linear-gradient(to right, yellow, green);
+}
+
+
 
 #giftProgressContainer {
   width: 100%;
