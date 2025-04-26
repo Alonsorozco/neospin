@@ -446,96 +446,106 @@ function resetGame() {
   
 
 
-  function finishGame(winningNumber) {
-    const gridButtons = document.querySelectorAll('#grid-container button');
-    gridButtons.forEach(btn => {
-      if (parseInt(btn.dataset.number) === winningNumber) {
-        btn.classList.add('winner');
-      }
-    });
-  
-    // Calcular la apuesta total antes de resolver
-    const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
-  
-    // Restar del saldo si aún no lo has hecho al apostar
-    if (playerBalance < 0) playerBalance = 0; // Protege de negativos
-    updateBalance();
-  
-    // Obtén los elementos de sonido
-    const winSound = document.getElementById('click-sound');
-    const loseSound = document.getElementById('lose-sound');
-  
-    if (selectedBets[winningNumber]) {
-      const winAmount = selectedBets[winningNumber] * 100;
-      totalWon += winAmount;
-      playerBalance += winAmount; // Ganancia neta
-      updateBalance();
-      saveToStorage();
-  
-      // Reproducir el sonido cuando se gane
-      winSound.currentTime = 0; // Reiniciar si ya se está reproduciendo
-      winSound.play();
-  
-      // Mostrar el modal de resultados de victoria
+  let partidasJugadas = 0; // Asegúrate de que esto esté definido globalmente
+let simbolosJugador = []; // Lista del jugador para guardar símbolos
 
-      showResultModal(`🎉 ¡Ganaste!<br>
-                       Número: ${winningNumber}<br>
-                       Premio: ${winAmount.toLocaleString()} pts<br>
-                       Apostado: ${totalBet.toLocaleString()} pts<br>
-                       Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
-    } else {
-      totalLost += totalBet;
-      saveToStorage();
-  
-      // Reproducir el sonido cuando se pierda
-      loseSound.currentTime = 0; // Reiniciar si ya se está reproduciendo
-      loseSound.play();
-  
-      // Mostrar el modal de resultados de derrota
-      showResultModal(`😢 Perdiste.<br>
-        Número ganador: ${winningNumber}<br>
-        Apostado: ${totalBet.toLocaleString()} pts<br>
-        Perdido: ${totalBet.toLocaleString()} pts<br>
-        Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
-      
-      
+function finishGame(winningNumber) {
+  const gridButtons = document.querySelectorAll('#grid-container button');
+  gridButtons.forEach(btn => {
+    if (parseInt(btn.dataset.number) === winningNumber) {
+      btn.classList.add('winner');
     }
+  });
 
-    setTimeout(() => {
-      const spinButton = document.getElementById('spinButton');
-      if (spinButton) {
-        spinButton.disabled = false;
-        spinButton.classList.remove('disabled'); // Si estás usando clases Bootstrap
-      }
-    }, 3500); 
+  const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
 
-    setTimeout(() => {
-      const cancelBtn = document.getElementById('cancelQuickBetBtn');
-      if (cancelBtn) {
-        cancelBtn.disabled = false;
-        cancelBtn.classList.remove('disabled'); // Si usás clases Bootstrap
-      }
-    }, 3500);
-    // 👇 Desbloquea el botón después de un retraso
-    setTimeout(() => {
-      const quickBetButton = document.getElementById('quickBetButton');
-      if (quickBetButton) {
-        quickBetButton.disabled = false;
-        quickBetButton.classList.remove('disabled'); // Si estás usando Bootstrap
-      }
-    }, 3500);  // 3000 ms (3 segundos de espera antes de desbloquear el botón)
+  if (playerBalance < 0) playerBalance = 0;
+  updateBalance();
 
-    quickBetUsed = false;
-    // 🔁 Limpia el estado de la apuesta rápida para la nueva ronda
-    quickBetPending = false;
-    wasBetConfirmed = false;
-    previousQuickBetCost = 0;
-    selectedNumbers = [];
-    isQuickBet = false;
-  
-    // Limpia las apuestas para la siguiente ronda
-    selectedBets = {};
+  const winSound = document.getElementById('click-sound');
+  const loseSound = document.getElementById('lose-sound');
+
+  if (selectedBets[winningNumber]) {
+    const winAmount = selectedBets[winningNumber] * 100;
+    totalWon += winAmount;
+    playerBalance += winAmount;
+    updateBalance();
+    saveToStorage();
+
+    winSound.currentTime = 0;
+    winSound.play();
+
+    showResultModal(`🎉 ¡Ganaste!<br>
+                     Número: ${winningNumber}<br>
+                     Premio: ${winAmount.toLocaleString()} pts<br>
+                     Apostado: ${totalBet.toLocaleString()} pts<br>
+                     Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
+  } else {
+    totalLost += totalBet;
+    saveToStorage();
+
+    loseSound.currentTime = 0;
+    loseSound.play();
+
+    showResultModal(`😢 Perdiste.<br>
+      Número ganador: ${winningNumber}<br>
+      Apostado: ${totalBet.toLocaleString()} pts<br>
+      Perdido: ${totalBet.toLocaleString()} pts<br>
+      Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
   }
+
+  setTimeout(() => {
+    const spinButton = document.getElementById('spinButton');
+    if (spinButton) {
+      spinButton.disabled = false;
+      spinButton.classList.remove('disabled');
+    }
+  }, 3500); 
+
+  setTimeout(() => {
+    const cancelBtn = document.getElementById('cancelQuickBetBtn');
+    if (cancelBtn) {
+      cancelBtn.disabled = false;
+      cancelBtn.classList.remove('disabled');
+    }
+  }, 3500);
+
+  setTimeout(() => {
+    const quickBetButton = document.getElementById('quickBetButton');
+    if (quickBetButton) {
+      quickBetButton.disabled = false;
+      quickBetButton.classList.remove('disabled');
+    }
+  }, 3500);
+
+  quickBetUsed = false;
+  quickBetPending = false;
+  wasBetConfirmed = false;
+  previousQuickBetCost = 0;
+  selectedNumbers = [];
+  isQuickBet = false;
+  selectedBets = {};
+
+  // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
+  partidasJugadas++;
+  updateGiftProgressBar();
+  if (partidasJugadas % 10 === 0) {
+    const simbolos = Object.keys(symbolValues);
+    const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
+    ownedSymbols.push(simboloRegalado); // 👈 usamos ownedSymbols aquí
+    const valor = symbolValues[simboloRegalado];
+  
+    showResultModal(`🎁 ¡Has jugado 10 partidas!<br>
+                     Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>
+                     Valor: ${valor.toLocaleString()} pts`, 0);
+  
+    saveToStorage();
+    updateInventory(); // 👈 actualiza el inventario en pantalla
+   
+  }
+  
+}
+
   
   
 
@@ -590,14 +600,18 @@ function placeBet(number, amount) {
     ownedSymbols = savedSymbols ? JSON.parse(savedSymbols) : [];
     totalWon = savedTotalWon ? parseInt(savedTotalWon) : 0;
     totalLost = savedTotalLost ? parseInt(savedTotalLost) : 0;
+    partidasJugadas = parseInt(localStorage.getItem('partidasJugadas')) || 0;
+    updateGiftProgressBar();
   }
 
   function saveToStorage() {
     localStorage.setItem('playerBalance', playerBalance);
-    localStorage.setItem('ownedSymbols', JSON.stringify(ownedSymbols));
     localStorage.setItem('totalWon', totalWon);
     localStorage.setItem('totalLost', totalLost);
+    localStorage.setItem('partidasJugadas', partidasJugadas);
+    localStorage.setItem('ownedSymbols', JSON.stringify(ownedSymbols)); // importante
   }
+  
 
 
 function showNotification(message) {
@@ -1395,4 +1409,60 @@ document.querySelectorAll('.bet-btn').forEach(button => {
 });
 
 
+
+function updateGiftProgressBar() {
+  const bar = document.getElementById('giftProgressBar');
+  const current = partidasJugadas % 10;
+  const percent = (current / 10) * 100;
+
+  bar.style.width = `${percent}%`;
+  bar.setAttribute('aria-valuenow', current);
+  bar.textContent = `${current} / 10`;
+
+  // Opcional: cambia color si llega a 10
+  if (current === 0 && partidasJugadas !== 0) {
+    bar.classList.remove('bg-success');
+    bar.classList.add('bg-warning');
+    bar.textContent = `¡Símbolo obtenido!`;
+  } else {
+    bar.classList.remove('bg-warning');
+    bar.classList.add('bg-success');
+  }
+}
+
+
+
+// Función para actualizar la barra de progreso
+function updateGiftProgress() {
+  const progressBar = document.getElementById('giftProgressBar');
+  const progressPercentage = (partidasJugadas % 10) * 10; // Cada 10 partidas, la barra se llena al 100%
+  progressBar.style.width = `${progressPercentage}%`;
+  progressBar.setAttribute('aria-valuenow', partidasJugadas % 10);
+
+  // Actualiza el texto dentro de la barra
+  progressBar.textContent = `${partidasJugadas % 10} / 10`;
+
+  // Verificar si llegó a 10 partidas
+  if (partidasJugadas % 10 === 0 && partidasJugadas !== 0) {
+    const regalo = "🎁"; // Símbolo de regalo
+    ownedSymbols.push(regalo); // Agregarlo al inventario
+    saveToStorage(); // Guardar en el almacenamiento local
+    updateInventory(); // Actualizar la visualización del inventario
+    showResultModal(`🎁 ¡Símbolo de regalo obtenido por jugar 10 partidas!`, regalo);
+
+    // 🌟 Animación de barra
+    progressBar.classList.add('gift-earned');
+
+    // ✨ Efecto sparkle visual
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    document.getElementById('giftProgressContainer').appendChild(sparkle);
+
+    // Eliminar el efecto después de 1 segundo
+    setTimeout(() => {
+      sparkle.remove();
+      progressBar.classList.remove('gift-earned');
+    }, 1000);
+  }
+}
 

@@ -38,6 +38,7 @@
   
     <div class="balance-display" id="player-balance">Saldo: 1.500.000 pts</div>
     <div class="cuadro-gamer mt-4 p-4 text-center">
+      
       <button class="btn btn-sobre-sorpresa mb-3" onclick="toggleShopBox()">🔽 Menu</button>
       <div style="text-align: center; margin-bottom: 10px;">
         <button class="btn btn-info btn-sobre-sorpresa " onclick="$('#inventoryModal').modal('show')">🎒 Tu Mochila</button>
@@ -52,6 +53,17 @@
         <button id="cancelQuickBetBtn" type="button" class="btn btn-sobre-sorpresa" onclick="cancelQuickBet()">❌ Abandonar apuesta</button>
       </div>
     </div>
+
+    <div class="mt-3">
+      <label class="form-label">Símbolo de regalo en la partida #10</label>
+      <div class="progress" style="height: 25px;">
+        <div id="giftProgressBar" class="progress-bar bg-success" role="progressbar" 
+             style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="10">
+          0 / 10
+        </div>
+      </div>
+    </div>
+    
 
      <div class="grid-container" id="grid-container">NEONSPIN</div>
  
@@ -644,27 +656,32 @@
 </div>
 
 
-<div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background-color: #111; color: #fff; border: 2px solid #ff00ff; box-shadow: 0 0 20px #ff00ff;">
-      <div class="modal-header border-0">
-        <h5 class="modal-title text-center" id="rulesModalLabel">Apuesta aleatoria</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+
+<!-- Modal -->
+<div class="modal fade" id="giftModal" tabindex="-1" aria-labelledby="giftModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="giftModalLabel">¡Símbolo de Regalo Obtenido!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <ul>
-          <li>Se seleccionan 20 números aleatoriamente.</li>
-          <li>Debes asignar un monto por cada número antes de confirmar.</li>
-          <li>Solo puedes apostar si tienes saldo suficiente.</li>
-          <li>La ruleta elegirá un número ganador al final del conteo.</li>
-        </ul>
+      <div class="modal-body text-center">
+        <!-- Símbolo Grande -->
+        <div class="gift-icon" style="font-size: 4rem; text-shadow: 0 0 15px yellow;">🎁</div>
+        <p class="mt-3">¡Felicidades! Has ganado un símbolo de regalo al jugar 10 partidas.</p>
+        <p>¿Qué te gustaría hacer con este símbolo?</p>
       </div>
-      <div class="modal-footer border-0">
-        <button class="btn btn-magenta" data-bs-dismiss="modal" style="background-color: #ff00ff; color: #000; font-weight: bold;">Entendido</button>
+      <div class="modal-footer">
+        <!-- Botón para vender -->
+        <button type="button" class="btn btn-warning" id="sellGiftButton">Vender Símbolo</button>
+        <!-- Botón de Cerrar -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
 </div>
+
 
 
 <!-- Botón para abrir el modal -->
