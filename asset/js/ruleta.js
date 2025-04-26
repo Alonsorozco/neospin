@@ -122,6 +122,8 @@ function openBetModal(num, btn) {
   selectedButton = btn;
   selectedNumbers = [num]; // Solo uno
   isQuickBet = false; // ← Apuesta manual
+  enableAllBets();    // ← Restaurar los montos bloqueados si hubo apuesta rápida
+
   $('#betModal').modal('show');
 }
 
@@ -164,74 +166,89 @@ function shuffleArray(array) {
 }
 
 // Variable global para controlar si hay una apuesta pendiente
+
+let quickBetUsed = false;  // Bandera para controlar si ya se hizo una apuesta rápida
+
 function quickBet() {
-
-  const rulesSeen = sessionStorage.getItem('rulesSeen');
-  if (!rulesSeen) {
-    const rulesModal = new bootstrap.Modal(document.getElementById('rulesModal'));
-    rulesModal.show();
-    sessionStorage.setItem('rulesSeen', 'true'); // Solo lo muestra una vez por sesión
-    return; // Evita continuar hasta que cierre el modal
-  }
-  
-  if (document.getElementById('countdown')?.innerText === '00:00') return;
-
-  if (quickBetPending || wasBetConfirmed) {
-    showActiveBetModal(); 
+  // Verificar si ya se ha utilizado una apuesta rápida
+  if (quickBetUsed) {
+    showResultModal('😢 Ya se ha realizado una apuesta rápida, puedes seguir apostando unitariamente', 0);
     return;
   }
 
-  // ⚠️ Limpiar botones y estado de apuestas anteriores
-  selectedNumbers.forEach(num => {
-    const button = document.querySelector(`.numero-btn[data-number="${num}"]`);
-    if (button) {
-      button.classList.remove('selected');
-      const label = button.querySelector('.bet-amount-display');
-      if (label) label.remove(); // Limpiar visualmente montos también
-    }
-  });
+  const montoRapido = 1000; // Fijo o puedes leerlo de una config
+  const countdown = document.getElementById('countdown')?.innerText;
 
-  // 🔄 Limpieza de estado
-  selectedNumbers = [];
-  selectedBets = {}; // Limpiar apuestas anteriores
+  if (countdown === '00:00') return;
 
   const allButtons = Array.from(document.querySelectorAll('.numero-btn'));
   const chosen = shuffleArray(allButtons).slice(0, 20);
-  const betCost = selectedBet * chosen.length;
+  const totalCost = montoRapido * chosen.length;
 
-  if (playerBalance < betCost) {
-    alert('Saldo insuficiente');
+  if (playerBalance < totalCost) {
+    showResultModal('😢 Saldo insuficiente para apuesta rápida.');
     return;
   }
 
-  // Función para mostrar el modal de apuesta activa
-function showActiveBetModal() {
-  const activeBetModal = new bootstrap.Modal(document.getElementById('activeBetModal'));
-  activeBetModal.show();
-}
-
-  // Restar el costo de la apuesta del saldo del jugador
-  playerBalance -= betCost;
-  updateBalance(); // Asegúrate de que esta función actualice correctamente el balance en la interfaz
-
-  previousQuickBetCost = betCost;
-  quickBetRefunded = false;
-  quickBetPending = true;
-  wasBetConfirmed = true; // Asegura que esté marcada como confirmada
+  // Guardar el costo de la apuesta para referencia futura
+  previousQuickBetCost = totalCost;
 
   selectedNumbers = chosen.map(btn => parseInt(btn.dataset.number));
+  selectedBets = {};
   isQuickBet = true;
+  wasBetConfirmed = true;
+  quickBetPending = true;
 
-  chosen.forEach(btn => btn.classList.add('selected'));
+  playerBalance -= totalCost;
+  updateBalance();
 
-  if (window.$) {
-    $('#betModal').modal('show');
-  } else {
-    console.log("Apuesta rápida lista:", selectedNumbers);
+  // Resaltar los números seleccionados
+  selectedNumbers.forEach(num => {
+    const button = document.querySelector(`.numero-btn[data-number="${num}"]`);
+    if (button) {
+      button.classList.add('selected');
+      selectedBets[num] = montoRapido;
+      let label = button.querySelector('.bet-amount-display');
+      if (!label) {
+        label = document.createElement('div');
+        label.classList.add('bet-amount-display');
+        button.appendChild(label);
+      }
+      label.innerText = `${montoRapido} pts`;
+    }
+  });
+
+  // Marcar que se ha realizado una apuesta rápida
+  quickBetUsed = true;
+
+  // Mostrar el modal de resultado
+  showResultModal('✅ ¡Apuesta rápida realizada!', totalCost);
+}
+
+
+
+// Función para manejar el reembolso si el jugador abandona o cierra el modal sin confirmar la apuesta
+function refundQuickBetIfNeeded() {
+  if (quickBetPending && !wasBetConfirmed && !quickBetRefunded) {
+    playerBalance += previousQuickBetCost;
+    updateBalance();
+    quickBetRefunded = true;
+    quickBetPending = false; // Marcar como no pendiente
+    selectedNumbers = [];
+    selectedBets = {};
+    console.log('💸 Apuesta rápida reembolsada.');
   }
 }
 
+// Escuchar el evento de cierre del modal para reembolsar si es necesario
+$('#betModal').on('hidden.bs.modal', function () {
+  refundQuickBetIfNeeded();
+});
+
+
 function setBetAmount() {
+ 
+
   if (selectedBet === 0) {
     showResultModal('😢 No se ha seleccionado una apuesta.', 0);
     return;
@@ -508,6 +525,7 @@ function resetGame() {
       }
     }, 3500);  // 3000 ms (3 segundos de espera antes de desbloquear el botón)
 
+    quickBetUsed = false;
     // 🔁 Limpia el estado de la apuesta rápida para la nueva ronda
     quickBetPending = false;
     wasBetConfirmed = false;
@@ -757,6 +775,8 @@ function buySymbol(symbol, price) {
   window.onload = function () {
     loadFromStorage();
     updateShopUI();
+  
+
     //updateStatsUI();
   };
 
@@ -1187,16 +1207,16 @@ let previousManualBetCost = 0;
 
 
 
-function cancelQuickBet() {
-  console.log("Cancelando apuesta...");
-  resetBetState();
-  
-  const modalElement = document.getElementById('betModal');
-  if (modalElement) {
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    if (modal) modal.hide();
+  function cancelQuickBet() {
+    console.log("Cancelando apuesta...");
+    resetBetState();
+    
+    const modalElement = document.getElementById('betModal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      if (modal) modal.hide();
+    }
   }
-}
 
 
 
@@ -1237,18 +1257,24 @@ function resetBetState({ refund = true } = {}) {
     showCancelBetModal(refundAmount);
   }
 
-  // Limpiar estado
-  selectedNumbers = [];
-  selectedBets = {};
-  quickBetPending = false;
-  wasBetConfirmed = false;
-  isQuickBet = false;
-  previousQuickBetCost = 0;
-
+ // Limpiar estado de apuestas previas
+ selectedNumbers = [];  // Limpiar los números seleccionados
+ selectedBets = {};  // Limpiar las apuestas previas
+ quickBetPending = false;  // Apuesta rápida no pendiente
+ wasBetConfirmed = false;  // No ha sido confirmada la apuesta
+ isQuickBet = false;  // No estamos en apuesta rápida
+ previousQuickBetCost = 0;  // Reiniciar el costo de la apuesta rápida
   // Reiniciar bandera del reembolso para futuras rondas
-  setTimeout(() => {
-    quickBetRefunded = false;
-  }, 1000);
+   // Limpiar la interfaz visual de los botones
+   document.querySelectorAll('.numero-btn').forEach(button => {
+    button.classList.remove('selected');  // Quitar la clase de selección
+    const label = button.querySelector('.bet-amount-display');
+    if (label) {
+      label.remove();  // Limpiar la cantidad de apuesta
+    }
+  });
+
+  console.log("Estado de la apuesta limpiado, listo para nueva apuesta.");
 }
 
 // Función para mostrar el modal con el monto del reembolso
@@ -1283,5 +1309,90 @@ function updateAllUniqueSymbolCounts() {
       : '';
   }
 }
+
+
+
+document.querySelectorAll('.bet-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const betAmount = parseInt(button.getAttribute('data-bet'));
+
+    // Bloquear montos no válidos en apuesta rápida
+    if (isQuickBet && [100000, 500000, 1000000].includes(betAmount)) {
+      alert('Este monto no está disponible para apuestas rápidas.');
+      return;
+    }
+
+    selectedBet = betAmount;
+
+    // Resaltar el botón seleccionado
+    document.querySelectorAll('.bet-btn').forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+  });
+});
+
+
+function disableInvalidQuickBets() {
+  document.querySelectorAll('.bet-btn').forEach(button => {
+    const betAmount = parseInt(button.getAttribute('data-bet'));
+    if ([100000, 500000, 1000000].includes(betAmount)) {
+      button.disabled = true;
+      button.classList.add('disabled'); // Agrega una clase visual (si tienes CSS)
+    }
+  });
+}
+
+function enableAllBets() {
+  document.querySelectorAll('.bet-btn').forEach(button => {
+    button.disabled = false;
+    button.classList.remove('disabled');
+  });
+}
+
+
+document.querySelectorAll('.bet-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const betAmount = parseInt(button.getAttribute('data-bet'));
+
+    if (playerBalance < betAmount) {
+      showResultModal('😢 Saldo insuficiente.', 0);
+      return;
+    }
+
+    selectedBet = betAmount;
+
+    // Descontar saldo
+    playerBalance -= selectedBet;
+    updateBalance();
+
+    // Resaltar visualmente el botón
+    document.querySelectorAll('.bet-btn').forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+
+    // Marcar número como seleccionado (si es apuesta manual)
+    if (!isQuickBet && selectedNumbers.length) {
+      selectedNumbers.forEach(num => {
+        const btn = document.querySelector(`.numero-btn[data-number="${num}"]`);
+        if (btn) {
+          btn.classList.add('selected');
+          let label = btn.querySelector('.bet-amount-display');
+          if (!label) {
+            label = document.createElement('div');
+            label.classList.add('bet-amount-display');
+            btn.appendChild(label);
+          }
+          label.innerText = selectedBet + ' pts';
+          selectedBets[num] = selectedBet;
+        }
+      });
+    }
+
+    wasBetConfirmed = true;
+
+    // Cerrar modal después de apostar
+    const betModal = bootstrap.Modal.getInstance(document.getElementById('betModal'));
+    if (betModal) betModal.hide();
+  });
+});
+
 
 
