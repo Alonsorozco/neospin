@@ -318,6 +318,30 @@ body {
     overflow: hidden;
   }
   
+
+  /* Sombra amarilla para el símbolo */
+.gift-icon {
+  text-shadow: 0 0 15px yellow, 0 0 30px yellow, 0 0 45px yellow;
+}
+
+/* Sombra amarilla para el símbolo */
+.prize-icon {
+  text-shadow: 0 0 15px yellow, 0 0 30px yellow, 0 0 45px yellow;
+}
+
+/* Efecto de brillo para el botón de vender */
+#sellPrizeButton {
+  background-color: #f8c300;
+  border-color: #f8c300;
+  box-shadow: 0 0 10px rgba(248, 195, 0, 0.8);
+}
+
+#sellPrizeButton:hover {
+  background-color: #e6b800;
+  border-color: #e6b800;
+  box-shadow: 0 0 15px rgba(248, 195, 0, 1);
+}
+
   
 
   .neon-modal {

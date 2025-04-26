@@ -445,107 +445,95 @@ function resetGame() {
   }
   
 
-
-  let partidasJugadas = 0; // Asegúrate de que esto esté definido globalmente
-let simbolosJugador = []; // Lista del jugador para guardar símbolos
-
-function finishGame(winningNumber) {
-  const gridButtons = document.querySelectorAll('#grid-container button');
-  gridButtons.forEach(btn => {
-    if (parseInt(btn.dataset.number) === winningNumber) {
-      btn.classList.add('winner');
-    }
-  });
-
-  const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
-
-  if (playerBalance < 0) playerBalance = 0;
-  updateBalance();
-
-  const winSound = document.getElementById('click-sound');
-  const loseSound = document.getElementById('lose-sound');
-
-  if (selectedBets[winningNumber]) {
-    const winAmount = selectedBets[winningNumber] * 100;
-    totalWon += winAmount;
-    playerBalance += winAmount;
+  let partidasJugadas = 0; // Contador de partidas global
+  let simbolosJugador = []; // Si ya usas ownedSymbols, este puede omitirse
+  
+  function finishGame(winningNumber) {
+    const gridButtons = document.querySelectorAll('#grid-container button');
+    gridButtons.forEach(btn => {
+      if (parseInt(btn.dataset.number) === winningNumber) {
+        btn.classList.add('winner');
+      }
+    });
+  
+    const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
+    if (playerBalance < 0) playerBalance = 0;
     updateBalance();
-    saveToStorage();
+  
+    const winSound = document.getElementById('click-sound');
+    const loseSound = document.getElementById('lose-sound');
+  
+    if (selectedBets[winningNumber]) {
+      const winAmount = selectedBets[winningNumber] * 100;
+      totalWon += winAmount;
+      playerBalance += winAmount;
+      updateBalance();
+      saveToStorage();
+  
+      winSound.currentTime = 0;
+      winSound.play();
+  
+      showResultModal(`🎉 ¡Ganaste!<br>
+                       Número: ${winningNumber}<br>
+                       Premio: ${winAmount.toLocaleString()} pts<br>
+                       Apostado: ${totalBet.toLocaleString()} pts<br>
+                       Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
+    } else {
+      totalLost += totalBet;
+      saveToStorage();
+  
+      loseSound.currentTime = 0;
+      loseSound.play();
+  
+      showResultModal(`😢 Perdiste.<br>
+                       Número ganador: ${winningNumber}<br>
+                       Apostado: ${totalBet.toLocaleString()} pts<br>
+                       Perdido: ${totalBet.toLocaleString()} pts<br>
+                       Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
+    }
+  
+    // Reactivar botones después de la animación
+    setTimeout(() => {
+      ['spinButton', 'cancelQuickBetBtn', 'quickBetButton'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        }
+      });
+    }, 3500);
+  
+    // Resetear estado de apuesta
+    quickBetUsed = false;
+    quickBetPending = false;
+    wasBetConfirmed = false;
+    previousQuickBetCost = 0;
+    selectedNumbers = [];
+    isQuickBet = false;
+    selectedBets = {};
+  
+    // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
+    partidasJugadas++;
+    updateGiftProgressBar();
+  
+    if (partidasJugadas % 10 === 0) {
+      const simbolos = Object.keys(symbolValues);
+      const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
+      const valor = symbolValues[simboloRegalado];
+  
+      ownedSymbols.push(simboloRegalado); // Añadir al inventario
+      saveToStorage();                   // Guardar
+      updateInventory();                // Mostrar en pantalla
 
-    winSound.currentTime = 0;
-    winSound.play();
-
-    showResultModal(`🎉 ¡Ganaste!<br>
-                     Número: ${winningNumber}<br>
-                     Premio: ${winAmount.toLocaleString()} pts<br>
-                     Apostado: ${totalBet.toLocaleString()} pts<br>
-                     Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
-  } else {
-    totalLost += totalBet;
-    saveToStorage();
-
-    loseSound.currentTime = 0;
-    loseSound.play();
-
-    showResultModal(`😢 Perdiste.<br>
-      Número ganador: ${winningNumber}<br>
-      Apostado: ${totalBet.toLocaleString()} pts<br>
-      Perdido: ${totalBet.toLocaleString()} pts<br>
-      Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
+      
+  
+      showPrizeModal(
+        `🎁 ¡Has jugado 10 partidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
+        simboloRegalado
+      );
+    }
   }
-
-  setTimeout(() => {
-    const spinButton = document.getElementById('spinButton');
-    if (spinButton) {
-      spinButton.disabled = false;
-      spinButton.classList.remove('disabled');
-    }
-  }, 3500); 
-
-  setTimeout(() => {
-    const cancelBtn = document.getElementById('cancelQuickBetBtn');
-    if (cancelBtn) {
-      cancelBtn.disabled = false;
-      cancelBtn.classList.remove('disabled');
-    }
-  }, 3500);
-
-  setTimeout(() => {
-    const quickBetButton = document.getElementById('quickBetButton');
-    if (quickBetButton) {
-      quickBetButton.disabled = false;
-      quickBetButton.classList.remove('disabled');
-    }
-  }, 3500);
-
-  quickBetUsed = false;
-  quickBetPending = false;
-  wasBetConfirmed = false;
-  previousQuickBetCost = 0;
-  selectedNumbers = [];
-  isQuickBet = false;
-  selectedBets = {};
-
-  // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
-  partidasJugadas++;
-  updateGiftProgressBar();
-  if (partidasJugadas % 10 === 0) {
-    const simbolos = Object.keys(symbolValues);
-    const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
-    ownedSymbols.push(simboloRegalado); // 👈 usamos ownedSymbols aquí
-    const valor = symbolValues[simboloRegalado];
   
-    showResultModal(`🎁 ¡Has jugado 10 partidas!<br>
-                     Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>
-                     Valor: ${valor.toLocaleString()} pts`, 0);
-  
-    saveToStorage();
-    updateInventory(); // 👈 actualiza el inventario en pantalla
-   
-  }
-  
-}
-
   
   
 
@@ -950,7 +938,7 @@ function sellSymbol(symbol) {
     updateShopUI();
     updateUniqueSymbolCount();
     updateDuplicateSymbolCount();
-
+    
     // Mostrar el modal de venta exitosa
     document.getElementById('ventaSymbolDisplay').innerText = symbol;
     document.getElementById('ventaAmountDisplay').innerText = value;
@@ -968,8 +956,9 @@ function sellSymbol(symbol) {
     // ventaModal.hide();
 
     // Recargar los símbolos en venta
-    loadOwnedSymbols(); // Recarga visual de repetidos
     updateInventory();
+    loadOwnedSymbols(); // Recarga visual de repetidos
+   
   } else {
     alert("El símbolo no se encuentra en tu inventario.");
   }
@@ -1464,5 +1453,52 @@ function updateGiftProgress() {
       progressBar.classList.remove('gift-earned');
     }, 1000);
   }
+}
+
+
+
+function showPrizeModal(message, simboloRegalado) {
+  const modalTitle = document.getElementById('prizeModalLabel');
+  const prizeIcon = document.querySelector('.prize-icon');
+  const modalBody = document.querySelector('.modal-body');
+  const sellButton = document.getElementById('sellPrizeButton');
+
+  const valor = symbolValues[simboloRegalado] || 0;
+
+  // Cambiar título
+  modalTitle.textContent = `¡Símbolo de Premio Obtenido!`;
+
+  // Mostrar el símbolo en el div correcto
+  prizeIcon.textContent = simboloRegalado;
+
+  // Cambiar el texto restante (sin tocar prize-icon)
+  const paragraphs = modalBody.querySelectorAll('p');
+  if (paragraphs.length >= 2) {
+    paragraphs[0].innerHTML = `¡Felicidades! Has ganado el símbolo <strong>${simboloRegalado}</strong>.`;
+    paragraphs[1].innerHTML = `Valor: ${valor.toLocaleString()} pts<br>¿Qué te gustaría hacer con este símbolo?`;
+  }
+
+  // Mostrar modal
+  const prizeModal = new bootstrap.Modal(document.getElementById('prizeModal'));
+  prizeModal.show();
+
+  // Reemplazar botón para evitar múltiples eventos
+  sellButton.replaceWith(sellButton.cloneNode(true));
+  const newSellButton = document.getElementById('sellPrizeButton');
+
+  newSellButton.addEventListener('click', () => {
+    alert(`¡Has vendido el símbolo ${simboloRegalado} por ${valor.toLocaleString()} pts!`);
+
+    const index = ownedSymbols.indexOf(simboloRegalado);
+    if (index !== -1) {
+      ownedSymbols.splice(index, 1);
+      playerBalance += valor;
+      updateInventory();
+      updateBalance();
+      saveToStorage();
+    }
+
+    prizeModal.hide();
+  });
 }
 
