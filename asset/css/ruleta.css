@@ -73,6 +73,14 @@ body {
     }
   }
   
+  #grid-container {
+    transition: opacity 0.3s ease, pointer-events 0.3s ease;
+  }
+  
+  /* Cuando la grilla está bloqueada */
+  #grid-container[style*="pointer-events: none"] {
+    opacity: 0.5;
+  }
   
 /* Fondo animado para el contenedor de la cuadrícula */
 .grid-container {

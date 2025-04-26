@@ -390,10 +390,15 @@ function resetGame() {
     }
   
     // Deshabilitar el botón de girar mientras se realiza el giro
+    const gridContainer = document.getElementById('grid-container');
     const spinButton = document.getElementById('spinButton');
     spinButton.disabled = true; // Deshabilitar el botón
     spinButton.style.cursor = 'not-allowed'; // Cambiar el cursor para indicar que está deshabilitado
     
+      // Bloquear la grilla
+    gridContainer.style.pointerEvents = 'none';  // Esto evitará cualquier interacción con la grilla
+    gridContainer.style.opacity = '0.5';  // Hace que la grilla sea semi-transparente para indicar que está bloqueada
+  
      // También podrías ocultar el cancelador si quieres:
      document.getElementById('cancelQuickBetBtn').disabled = true;
 
@@ -493,15 +498,24 @@ function resetGame() {
     }
   
     // Reactivar botones después de la animación
-    setTimeout(() => {
-      ['spinButton', 'cancelQuickBetBtn', 'quickBetButton'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-          btn.disabled = false;
-          btn.classList.remove('disabled');
-        }
-      });
-    }, 3500);
+setTimeout(() => {
+  // Reactivar botones
+  ['spinButton', 'cancelQuickBetBtn', 'quickBetButton'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.disabled = false;
+      btn.classList.remove('disabled');
+    }
+  });
+
+  // Reactivar la grilla después de la animación
+  const gridContainer = document.getElementById('grid-container');
+  if (gridContainer) {
+    gridContainer.style.pointerEvents = 'auto';  // Permitir la interacción con la grilla
+    gridContainer.style.opacity = '1';  // Restaurar la opacidad normal de la grilla
+  }
+}, 3500);
+
   
     // Resetear estado de apuesta
     quickBetUsed = false;
@@ -530,7 +544,11 @@ function resetGame() {
       showPrizeModal(
         `🎁 ¡Has jugado 10 partidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
         simboloRegalado
+
+    
+
       );
+    
     }
   }
   
@@ -1223,7 +1241,7 @@ let previousManualBetCost = 0;
 
 
 
-
+  
 function resetBetState({ refund = true } = {}) {
   let refundAmount = 0;
 
