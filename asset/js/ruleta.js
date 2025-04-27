@@ -215,7 +215,7 @@ function quickBet() {
         label.classList.add('bet-amount-display');
         button.appendChild(label);
       }
-      label.innerText = `${montoRapido} pts`;
+      label.innerText = `${montoRapido}`;
     }
   });
 
@@ -282,7 +282,7 @@ function setBetAmount() {
       label.classList.add('bet-amount-display');
       button.appendChild(label);
     }
-    label.innerText = selectedBets[num] + ' pts';
+    label.innerText = selectedBets[num] + ' ';
   });
 
   wasBetConfirmed = true;
@@ -574,7 +574,7 @@ function finishGame(winningNumber) {
     saveToStorage();                   // Guardar
     updateInventory();                // Mostrar en pantalla
     updateUniqueSymbolProgressBar();
-
+    updateDuplicateSymbolCount();
     showPrizeModal(
       `🎁 ¡Has Ganado un premio por partidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
       simboloRegalado
@@ -1503,7 +1503,7 @@ document.querySelectorAll('.bet-btn').forEach(button => {
             label.classList.add('bet-amount-display');
             btn.appendChild(label);
           }
-          label.innerText = selectedBet + ' pts';
+          label.innerText = selectedBet + '';
           selectedBets[num] = selectedBet;
         }
       });
@@ -1603,13 +1603,13 @@ let uniqueSymbols = 0; // símbolos únicos (encontrados + comprados sin repetir
 
 function updateUniqueSymbolProgressBar() {
   const bar = document.getElementById('uniqueSymbolProgressBar');
-  const current = ownedSymbols.length; // Usa el número de símbolos únicos o cualquier otra variable para el progreso
+  const uniqueCount = new Set(ownedSymbols).size; // <<< contamos solo los símbolos únicos
   const total = 36; // Total de símbolos para completar
-  const percent = (current / total) * 100;
+  const percent = (uniqueCount / total) * 100;
 
   // Actualizar el ancho de la barra
   bar.style.width = `${percent}%`;
-  bar.setAttribute('aria-valuenow', current);
+  bar.setAttribute('aria-valuenow', uniqueCount);
 
   // Cambiar el texto dentro de la barra para mostrar el porcentaje
   bar.textContent = `${Math.round(percent)}%`;
@@ -1641,38 +1641,40 @@ let inventory = {
 
 function updateUniqueSymbolCount() {
   const uniqueCount = new Set(ownedSymbols).size;
-  
-  const countEl = document.getElementById('uniqueSymbolCount');           // contador fuera del modal
-  const modalCountEl = document.getElementById('modalUniqueSymbolCount'); // contador dentro del modal
-  const msgEl = document.getElementById('completionMessage');             // mensaje de felicitaciones
-  const progressBar = document.getElementById('uniqueSymbolProgressBar'); // barra de progreso
 
-  // Actualizar contadores
+  const countEl = document.getElementById('uniqueSymbolCount');
+  const modalCountEl = document.getElementById('modalUniqueSymbolCount');
+  const msgEl = document.getElementById('completionMessage');
+  const progressBar = document.getElementById('uniqueSymbolProgressBar');
+
   if (countEl) countEl.textContent = uniqueCount;
   if (modalCountEl) modalCountEl.textContent = uniqueCount;
-
-  // Actualizar mensaje de finalización
-  if (msgEl) {
-    if (uniqueCount === 36) {
-      msgEl.textContent = '¡Felicitaciones, Completaste los 36 Símbolos! 👏';
-    } else {
-      msgEl.textContent = '';
-    }
-  }
 
   // Actualizar la barra de progreso
   if (progressBar) {
     const progressPercent = (uniqueCount / 36) * 100;
     progressBar.style.width = `${progressPercent}%`;
+    progressBar.textContent = `${Math.round(progressPercent)}%`;
 
-    // Cambiar color si completa
     if (uniqueCount === 36) {
       progressBar.style.backgroundColor = 'gold';
     } else {
-      progressBar.style.backgroundColor = ''; // o ponerle tu color normal (ej: 'blue')
+      progressBar.style.backgroundColor = ''; // Reset
+    }
+  }
+
+  // Mostrar mensaje de felicitación si corresponde
+  if (msgEl) {
+    if (uniqueCount === 36) {
+      msgEl.textContent = '¡Felicitaciones, Completaste los 36 Símbolos! 👏';
+      msgEl.style.display = 'block';
+    } else {
+      msgEl.textContent = '';
+      msgEl.style.display = 'none';
     }
   }
 }
+
 
 
 // Inicializar los tooltips

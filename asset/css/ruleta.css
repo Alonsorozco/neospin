@@ -172,9 +172,9 @@ body {
   padding: 20px;
   border-radius: 12px;
 
-  background: linear-gradient(270deg, #0fffc1, #3b00ff, #ff00c8, #00ffee);
+  background: linear-gradient(270deg, #770fff, #3b00ff, #ff00c8, #0703ff);
   background-size: 800% 800%;
-  animation: neonGridBackground 15s ease infinite;
+  animation: neonGridBackground 10s ease infinite;
 
   box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
 }
@@ -374,12 +374,12 @@ body {
 }
 
 
-  
 .bet-amount-display {
   position: absolute;
-  bottom: 2px;
-  right: 5px;
-  font-size: 12px;
+  bottom: 50%; /* Centrado verticalmente */
+  right: 50%;
+  transform: translate(50%, 50%); /* Centrado total */
+  font-size: 14px; /* Aumenté un poco el tamaño de la fuente */
   color: #fff;
   font-weight: bold;
   text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff;
@@ -393,10 +393,11 @@ body {
     inset 0 0 10px #ff00ff;
   animation: pulse-glow 1.5s infinite alternate;
   transition: transform 0.2s ease;
+  z-index: 10; /* Asegura que esté por encima de otros elementos */
 }
 
 .bet-amount-display:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) translate(50%, 50%);
 }
 
 /* Animación para que brille */
@@ -415,20 +416,165 @@ body {
   }
 }
 
-  .countdown {
-    font-size: 32px;
-    font-weight: bold;
-    color: #ff00ff;
-    margin: 10px 0;
-    text-shadow: 0 0 15px #ff00ff;
-    animation: pulse 1s infinite;
-  }
-  
-  @keyframes pulse {
-    0% { text-shadow: 0 0 10px #ff00ff; }
-    50% { text-shadow: 0 0 20px #ff00ff; }
-    100% { text-shadow: 0 0 10px #ff00ff; }
-  }
+.countdown {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff00ff;
+  margin: 10px 0;
+  text-shadow: 0 0 15px #ff00ff;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { text-shadow: 0 0 10px #ff00ff; }
+  50% { text-shadow: 0 0 20px #ff00ff; }
+  100% { text-shadow: 0 0 10px #ff00ff; }
+}
+
+
+.btn-apostar {
+  background: linear-gradient(145deg, #00ffcc, #00ccaa); /* Degradado para dar un toque moderno */
+  color: #000;
+  padding: 12px 20px; /* Espaciado adecuado */
+  font-size: 16px;
+  font-family: 'Orbitron', sans-serif; /* Fuente futurista */
+  border: none;
+  border-radius: 25px; /* Bordes redondeados */
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Espaciado entre letras */
+  box-shadow: 0 4px 12px rgba(0, 255, 204, 0.3), 0 6px 20px rgba(0, 255, 204, 0.2); /* Sombras para darle profundidad */
+  transition: all 0.3s ease-in-out; /* Transiciones suaves */
+  position: relative;
+}
+
+.btn-apostar:hover {
+  background: linear-gradient(145deg, #00ccaa, #00ffee); /* Cambio de color en hover */
+  box-shadow: 0 6px 18px rgba(0, 255, 204, 0.4), 0 8px 30px rgba(0, 255, 204, 0.3); /* Efecto de sombra ampliada */
+  transform: scale(1.05); /* Aumento del tamaño en hover */
+}
+
+.btn-apostar:active {
+  background: linear-gradient(145deg, #00ffee, #00ccaa); /* Invertir colores al hacer clic */
+  box-shadow: 0 4px 12px rgba(0, 255, 204, 0.2), 0 6px 20px rgba(0, 255, 204, 0.1); /* Sombra más suave al hacer clic */
+  transform: scale(0.98); /* Reducir tamaño al hacer clic */
+}
+
+.btn-apostar::before {
+  content: '💰'; /* Icono de dinero antes del texto */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.btn-apostar:hover::before {
+  opacity: 1; /* Aumenta la visibilidad del icono en hover */
+}
+
+.btn-apostar:active::before {
+  opacity: 0.5; /* Disminuir visibilidad del icono cuando se hace clic */
+}
+
+
+.btn-abandonar {
+  background: linear-gradient(145deg, #ff4c4c, #ff0000); /* Degradado en tonos rojos para el botón de abandonar */
+  color: #fff;
+  padding: 12px 20px; /* Espaciado adecuado */
+  font-size: 16px;
+  font-family: 'Orbitron', sans-serif; /* Fuente futurista */
+  border: none;
+  border-radius: 25px; /* Bordes redondeados */
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Espaciado entre letras */
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3), 0 6px 20px rgba(255, 0, 0, 0.2); /* Sombras para dar profundidad */
+  transition: all 0.3s ease-in-out; /* Transiciones suaves */
+  position: relative;
+}
+
+.btn-abandonar:hover {
+  background: linear-gradient(145deg, #ff0000, #ff6666); /* Cambio de color en hover */
+  box-shadow: 0 6px 18px rgba(255, 0, 0, 0.4), 0 8px 30px rgba(255, 0, 0, 0.3); /* Efecto de sombra ampliada */
+  transform: scale(1.05); /* Aumento del tamaño en hover */
+}
+
+.btn-abandonar:active {
+  background: linear-gradient(145deg, #ff6666, #ff0000); /* Invertir colores al hacer clic */
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2), 0 6px 20px rgba(255, 0, 0, 0.1); /* Sombra más suave al hacer clic */
+  transform: scale(0.98); /* Reducir tamaño al hacer clic */
+}
+
+.btn-abandonar::before {
+  content: ''; /* Icono de cruz antes del texto */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.btn-abandonar:hover::before {
+  opacity: 1; /* Aumenta la visibilidad del icono en hover */
+}
+
+.btn-abandonar:active::before {
+  opacity: 0.5; /* Disminuir visibilidad del icono cuando se hace clic */
+}
+
+.btn-cerrar {
+  background-color: #ff4d4d; /* Rojo brillante para el botón de cerrar */
+  color: #fff;
+  padding: 12px 20px; /* Espaciado adecuado */
+  font-size: 16px;
+  font-family: 'Orbitron', sans-serif; /* Fuente futurista */
+  border: none;
+  border-radius: 25px; /* Bordes redondeados */
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px; /* Espaciado entre letras */
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3), 0 6px 20px rgba(255, 0, 0, 0.2); /* Sombras para profundidad */
+  transition: all 0.3s ease-in-out; /* Transiciones suaves */
+  position: relative;
+}
+
+.btn-cerrar:hover {
+  background-color: #ff3333; /* Rojo más oscuro al pasar el ratón */
+  box-shadow: 0 6px 18px rgba(255, 0, 0, 0.4), 0 8px 30px rgba(255, 0, 0, 0.3); /* Efecto de sombra ampliada */
+  transform: scale(1.05); /* Aumentar el tamaño del botón en hover */
+}
+
+.btn-cerrar:active {
+  background-color: #ff1a1a; /* Rojo más oscuro cuando se hace clic */
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2), 0 6px 20px rgba(255, 0, 0, 0.1); /* Sombra más suave al hacer clic */
+  transform: scale(0.98); /* Reducir el tamaño al hacer clic */
+}
+
+.btn-cerrar::before {
+  content: ''; /* Icono de cruz antes del texto */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.btn-cerrar:hover::before {
+  opacity: 1; /* Aumentar visibilidad del icono en hover */
+}
+
+.btn-cerrar:active::before {
+  opacity: 0.5; /* Disminuir visibilidad del icono cuando se hace clic */
+}
+
+
   
   .balance-display {
     background: linear-gradient(to right, #00ffcc, #009999);
@@ -521,6 +667,11 @@ body {
   }
   
   
+  .futuristic-btn, .futuristic-btn-apuesta {
+    width: 100%; /* Asegura que todos los botones tengan el mismo ancho */
+    font-size: 14px; /* Ajusta el tamaño de la fuente para que todos se vean uniformes */
+  }
+  
   .futuristic-btn:hover {
     background-color: #00ccaa;
     box-shadow: 0 0 15px #00ffee, 0 0 30px #00ffeeaa;
@@ -535,8 +686,9 @@ body {
     background-color: #00ffcc;
     color: #000;
     padding: 12px 12px;
-    font-size: 12px;
-    font-family: 'Orbitron', sans-serif; /* Fuente futurista opcional */
+    font-size: 17px; /* Aumenté un poco el tamaño de la fuente para mejor visibilidad */
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -802,7 +954,7 @@ body {
     width: 15rem; /* Ajusta el tamaño que prefieras */
     height: 50px; /* Ajusta el tamaño que prefieras */
     background: linear-gradient(145deg, #ff1100, #ff8800);
-    color: rgb(3, 3, 3);
+    color: rgb(255, 255, 255);
     border: none;
     font-weight: bold;
     border-radius: 8px;
@@ -834,8 +986,8 @@ body {
   .btn-sobre-sorpresa {
     width: 15rem; /* Ajusta el tamaño que prefieras */
     height: 50px; /* Ajusta el tamaño que prefieras */
-    background: linear-gradient(145deg, #00aaff, #00ddff);
-    color: white;
+    background: linear-gradient(145deg, #00fff2, #02ffea);
+    color: rgb(0, 0, 0);
     border: none;
     font-weight: bold;
     border-radius: 8px;

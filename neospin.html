@@ -55,7 +55,7 @@
       </div>
          <!-- Botones para elegir cantidad de números aleatorios -->
          <div id="quickBetDiv" style="display: none; margin-bottom: 10px">
-          <button id="quickBetButton" class="btn btn-aleatorio " onclick="quickBet()">🎲 Apuesta Rápida 50K pts</button>
+          <button id="quickBetButton" class="btn btn-aleatorio " onclick="quickBet()">🎲 Apuesta Rápida 50K</button>
         </div>
         
     
@@ -82,6 +82,7 @@
     
 
     <div id="progressSection" class="mt-3" style="display:none;">
+      <div id="completionMessage" class="text-success text-center mb-3"></div>
       <!-- Barra de progreso para el premio sorpresa -->
       <label class="form-label">🎁 Avance para tu premio sorpresa</label>
       <div class="progress" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
@@ -91,10 +92,12 @@
       </div>
     
       <!-- Barra de progreso para completar los 36 símbolos -->
-      <label class="form-label">Avance para completar los 36 símbolos</label>
+      <label class="form-label">🎒 Mochila 36 Simbolos</label>
       <div id="progress-container" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
         <div id="uniqueSymbolProgressBar" class="custom-progress-bar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
           0%
+          <!-- AQUÍ AGREGO EL MENSAJE -->
+        <div id="completionMessage" style="margin-top: 5px; text-align: center; font-weight: bold; color: gold;" class="mb-5"></div>
         </div>
       </div>
     </div>
@@ -105,41 +108,40 @@
      <div class="grid-container" id="grid-container">NEONSPIN</div>
      
  
-  <!-- Modal de apuesta -->
-  <div class="modal fade" tabindex="-1" id="betModal" data-backdrop="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Elegir apuesta</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="bet-buttons">
-            <!-- Los botones para las apuestas -->
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="100">100 pts</button>
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="500">500 pts</button>
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="1000">1.000 pts</button>
-            <button class="btn futuristic-btn-apuesta  bet-btn" data-bet="5000">5.000 pts</button>
-            <button class="btn futuristic-btn-apuesta  bet-btn" data-bet="10000">10.000 pts</button>
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="50000">50.000 pts</button>
-            <button class="btn futuristic-btn-apuesta  bet-btn" data-bet="100000">100.000 pts</button>
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="500000">500.000 pts</button>
-            <button class="btn futuristic-btn-apuesta bet-btn" data-bet="1000000">1.000.000 pts</button>
-          </div>
-        </div>
-        <div class="justify-content-center">
-          
-        </div>
-
-        <div class="modal-footer">
-          <button id="confirmBetBtn" class="btn btn-sobre-sorpresa" onclick="setBetAmount()">💰Apostar</button>
-          <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal" onclick="cancelQuickBet()">❌Abandonar</button>
+<!-- Modal de apuesta -->
+<div class="modal fade" tabindex="-1" id="betModal" data-backdrop="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Elegir apuesta</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex flex-column align-items-center">
+          <!-- Los botones para las apuestas -->
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="100">100 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="500">500 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="1000">1.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="5000">5.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="10000">10.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="50000">50.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="100000">100.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="500000">500.000 pts</button>
+          <button class="btn futuristic-btn-apuesta bet-btn mb-2" data-bet="1000000">1.000.000 pts</button>
         </div>
       </div>
+
+      <div class="modal-footer d-flex flex-column align-items-center">
+        <button id="confirmBetBtn" class="btn btn-apostar mb-2" onclick="setBetAmount()">💰Apostar</button>
+        <button type="button" class="btn btn-abandonar" data-bs-dismiss="modal" onclick="cancelQuickBet()">Abandonar</button>
+      </div>
+      
     </div>
   </div>
+</div>
+
   
   
   
@@ -179,7 +181,7 @@
       <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title" id="inventoryModalLabel">🎒 Tu Mochila </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
 
       <!-- BODY -->
@@ -199,10 +201,7 @@
         <!-- MENSAJE DE FELICITACIÓN -->
         <div id="completionMessage" class="text-success text-center mb-3"></div>
 
-        <!-- BOTÓN DE CIERRE EXTRA -->
-        <div class="text-center mt-4">
-          <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
-        </div>
+      
         </div>
 
         <!-- CONTENIDO DEL INVENTARIO -->
@@ -216,7 +215,7 @@
 
       <!-- FOOTER -->
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
       </div>
 
     </div>
@@ -253,7 +252,12 @@
       <button class="btn btn-warning btn-sobre-venta" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
     </div>
 
-   
+    <div class="text-center mt-4">
+      <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#symbolValueModal" onclick="loadSymbolValues()">
+        💸Valores de venta
+      </button>
+    </div>
+
     <div class="text-center mt-4">
       <button class="btn btn-warning btn-sobre-venta" onclick="$('#espicificamodal').modal('show')">👑 Caracteristicas Simbolos </button>
     </div>
@@ -262,21 +266,22 @@
          🎰 Slot Machine
         </button>
     </div>
+    <div class="text-center mt-4 ">
+      <button class="btn btn-sobre-venta" onclick="buySymbolPack()">
+        🎁 Sobre sorpresa 1.500.000 Pts
+        </button>
+      </div>
     <div class="text-center mt-4">
     <!-- Botón para abrir el modal con el historial -->
-        <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#gameStatsModal">Ver Historial de Partidas</button>
+        <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#gameStatsModal">🔢 Estadísticas</button>
     </div>
   
     <div class="text-center mt-4 ">
       <button type="button " class="btn btn-warning btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#gameInstructionsModal">
-        ¿Cómo se juega?
+        ⚙️ ¿Cómo se juega?
       </button>
     </div>
-    <div class="text-center mt-4 ">
-    <button class="btn btn-sobre-venta" onclick="buySymbolPack()">
-      Sobre sorpresa🎁 1.500.000 Pts
-      </button>
-    </div>
+   
     <div class="text-center mt-4 ">
       <button id="mute-toggle" class="btn btn-sm btn-outline-light">
          🔇 Silenciar
@@ -310,7 +315,7 @@
             <div class="owned-symbols"id="purchasedSymbolDisplay"></divid>></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Aceptar</button>
+            <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Aceptar</button>
           </div>
         </div>
       </div>
@@ -325,7 +330,7 @@
       <!-- HEADER -->
       <div class="modal-header">
         <h5 class="modal-title" id="ventaModalLabel">💸 Vender Símbolos</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
 
       <!-- BODY -->
@@ -335,11 +340,7 @@
         <div class="d-flex justify-content-center mb-3">
         </div>
 
-        <!-- BOTÓN DE CIERRE EXTRA -->
-        <div class="text-center mt-3">
-          <button type="button" class="btn btn-sobre-sorpresa mb-4" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-
+  
         
 
         <!-- CONTENIDO DE SÍMBOLOS A VENDER -->
@@ -348,19 +349,14 @@
         </div>
 
         <!-- BOTÓN DE VER VALORES DE VENTA -->
-        <div class="text-center mt-4">
-          <button class="btn btn-sobre-sorpresa" data-bs-toggle="modal" data-bs-target="#symbolValueModal" onclick="loadSymbolValues()">
-            Valores de ventas
-          </button>
-        </div>
-
+      
 
 
       </div>
 
       <!-- FOOTER -->
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
       </div>
 
     </div>
@@ -381,7 +377,7 @@
           Has ganado: <span id="ventaAmountDisplay"></span> pts
         </div>
         <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Aceptar</button>
+          <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Aceptar</button>
         </div>
       </div>
     </div>
@@ -393,7 +389,7 @@
          <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">¡Símbolos obtenidos!🎁</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-cerrar" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body text-center" id="purchasedSymbolDisplay" style="font-size: 2rem;">
           <!-- Aquí se mostrarán los símbolos -->
@@ -408,39 +404,38 @@
           <div class="modal-content text-center">
             <div class="modal-header">
               <h5 class="modal-title">Saldo insuficiente</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
               <p>No tienes suficientes puntos para comprar este sobre.</p>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn  btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn  btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
             </div>
           </div>
            </div>
       </div>
   
-  <!-- valores de Venta Simbolo  -->
-      <div class="modal fade " id="symbolValueModal" tabindex="-1" aria-labelledby="symbolValueModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="symbolValueModalLabel">Valores de venta de los símbolos</h5>
+  <!-- Modal de valores de venta de los símbolos -->
+<div class="modal fade" id="symbolValueModal" tabindex="-1" aria-labelledby="symbolValueModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- modal-dialog-centered centrará el modal -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="symbolValueModalLabel">Valores de venta de los símbolos</h5>
 
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body text">
-              <div id="symbol-values" class="row mt-4"></div>
-            </div>
-
-            <div class="text-center mt-3">
-              <button type="button" class="btn btn-sobre-sorpresa mb-4" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-    
-          </div>
-         </div>
+        <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-  
+      <div class="modal-body text-center">
+        <div id="symbol-values" class="row"></div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-cerrar mb-4" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   
    
   
@@ -450,7 +445,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="symbolValueModalLabel">Caracteristicas de los Simbolos son 36 en total</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <!-- Tienda de símbolos -->
@@ -511,7 +506,7 @@
 
             <!-- Footer con botón cerrar -->
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn  btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
            </div> 
           
   
@@ -531,7 +526,7 @@
                   
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn-cerrar btn-secondary" data-dismiss="modal">Cerrar</button>
                 </div>  
               </div>
             </div>
@@ -550,8 +545,6 @@
 
 
 
-<!-- Modal -->
-<!-- Modal: Instrucciones del Juego -->
 <!-- Modal: Instrucciones del Juego -->
 <div class="modal fade" id="gameInstructionsModal" tabindex="-1" aria-labelledby="gameInstructionsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -559,7 +552,7 @@
       
       <div class="modal-header">
         <h5 class="modal-title" id="gameInstructionsModalLabel">Instrucciones del Juego</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       
       <div class="modal-body">
@@ -594,9 +587,9 @@
             Utiliza tus puntos para <strong>vender o comprar símbolos</strong> y así completar tu colección más rápido.
         </p>
     
-        <h6 class="mt-4"><strong>🎮 Apuesta rápida:</strong></h6>
+        <h6 class="mt-4"><strong>🎮 Apuesta rápida 50.000 Pts:</strong></h6>
         <p>
-            La <strong>apuesta rápida</strong> consta de 20 números aleatorios, cada uno con un costo de <strong>1000 puntos</strong>. Si aciertas, ganarás puntos y aumentarás tus posibilidades de conseguir símbolos.
+            La <strong>apuesta rápida</strong> consta de 20 números aleatorios, cada uno con un costo de <strong>2500 puntos</strong>. Si aciertas, ganarás puntos y aumentarás tus posibilidades de conseguir símbolos.
         </p>
         <p>
             Podrás seguir apostando unitariamente si prefieres hacerlo de forma más específica.
@@ -653,7 +646,7 @@
     
         <!-- Footer con botón cerrar -->
         <div class="modal-footer justify-content-center">
-            <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
         </div>
     </div>
     
@@ -679,14 +672,12 @@
     <div class="modal-content neon-modal">
       <div class="modal-header">
         <h5 class="modal-title" id="slotModalLabel">🎰 Máquina de Símbolos</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body text-center">
         <p>Gira la máquina por <strong>3.000.000 pts</strong> y gana 3 símbolos aleatorio.</p>
 
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn  btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
-       </div> 
+       
 
         <!-- Contenedor de 3 columnas para simular el slot -->
         <div id="slot-container" class="slot-container" style="display: flex; justify-content: center; gap: 30px;">
@@ -695,7 +686,10 @@
           <div id="slot-result3" class="slot-box">🎲</div>
         </div>
         <p id="slot-result-message" style="font-size: 1.2rem; margin-top: 20px;"></p> <!-- Mensaje del inventario -->
-        <button onclick="playSlot()" class="btn btn-neon">🎰 Girar</button>
+        <button onclick="playSlot()" class="btn btn-neon mb-3">🎰 Girar</button>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn  btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
+       </div> 
       </div>
     </div>
   </div>
@@ -708,13 +702,13 @@
     <div class="modal-content neon-modal">
       <div class="modal-header">
         <h5 class="modal-title" id="cancelBetModalLabel">Apuesta Cancelada</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body text-center">
         <p id="refundMessage"></p> <!-- Aquí se mostrará el mensaje de reembolso -->
 
         <div class="text-center mt-3">
-          <button type="button" class="btn btn-sobre-sorpresa mb-4" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn  btn-cerrar mb-4" data-bs-dismiss="modal">Cerrar</button>
         </div>
 
       </div>
@@ -728,13 +722,13 @@
     <div class="modal-content neon-modal">
       <div class="modal-header">
         <h5 class="modal-title" id="activeBetModalLabel">¡Apuesta Activa!</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body text-center">
         <p id="activeBetMessage">Ya tienes una apuesta activa. Cancélala antes de continuar.</p>
       </div>
       <div class="text-center mt-3">
-        <button type="button" class="btn btn-sobre-sorpresa mb-4" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-cerrar mb-4" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
@@ -746,7 +740,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="gameStatsModalLabel">Estadísticas del Juego</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div id="gameStatsContainer" class="game-stats">
@@ -768,16 +762,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="prizeModalLabel">¡Símbolo de Premio Obtenido!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
         <!-- Este div sí es el correcto para poner el símbolo -->
         <div class="prize-icon" style="font-size: 15rem; text-shadow: 0 0 30px yellow;">🎁</div>
-        <p class="mt-3">¡Felicidades! Has ganado un símbolo de premio sorpresa , si lo tienes repetido lo podras vender en el menu</p>
+        <p class="mt-3">¡Felicidades! Has ganado un símbolo de premio sorpresa</p>
       </div>      
       <div class="modal-footer">
         <!-- Botón de Cerrar -->
-        <button type="button" class="btn btn-sobre-sorpresa mb-4" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-cerrar mb-4" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>
@@ -796,7 +790,7 @@
       <div class="modal-header">
         <div class="shop-box-header text-center ">🛒 Tienda de Símbolos</div>
 
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="btn-cerrar btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
 
       <div class="modal-body">
@@ -862,7 +856,7 @@
 
       <!-- Footer con botón cerrar -->
       <div class="modal-footer justify-content-center">
-        <button type="button" class="btn  btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn  btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
      </div>
 
     </div>
