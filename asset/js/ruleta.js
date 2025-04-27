@@ -172,6 +172,7 @@ let quickBetUsed = false;  // Bandera para controlar si ya se hizo una apuesta r
 function quickBet() {
   // Verificar si ya se ha utilizado una apuesta rápida
   if (quickBetUsed) {
+   
     showResultModal('😢 Ya se ha realizado una apuesta rápida, puedes seguir apostando unitariamente', 0);
     return;
   }
@@ -1187,6 +1188,7 @@ function showResultModal(message, amount) {
   spinButton.addEventListener('click', () => {
     const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
     if (totalBet === 0) {
+     
       showResultModal('⚠️ Debes apostar antes de girar.', 0);
       const quickBetButton = document.getElementById('quickBetButton');
       if (quickBetButton) {
@@ -1201,7 +1203,7 @@ function showResultModal(message, amount) {
  
   });
 
-
+  
 
   document.addEventListener('DOMContentLoaded', () => {
     const clickSound = document.getElementById('click-sound');
