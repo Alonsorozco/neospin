@@ -177,7 +177,7 @@ function quickBet() {
     return;
   }
 
-  const montoRapido = 1000; // Fijo o puedes leerlo de una config
+  const montoRapido = 2500; // Fijo o puedes leerlo de una config
   const countdown = document.getElementById('countdown')?.innerText;
 
   if (countdown === '00:00') return;

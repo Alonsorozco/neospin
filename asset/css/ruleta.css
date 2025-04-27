@@ -714,7 +714,16 @@ body {
   }
 
 
- 
+  .btn-aleatorio {
+    background: linear-gradient(145deg, #ff1e00, #ff00ff);
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(255, 38, 0, 0.8), 0 0 24px rgba(255, 0, 0, 0.5);
+    animation: sobreGlow 2s infinite ease-in-out;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
   
 
   
@@ -891,19 +900,38 @@ body {
   }
 
   #spinButton {
-    background: linear-gradient(45deg, #00f2ff, #0077ff, #00f2ff);
+    background: linear-gradient(45deg, #ff4d4d, #212a2c, #4dffd3); /* Cambio de colores para hacerlo más vibrante */
     color: white;
-    font-size: 24px;
+    font-size: 26px; /* Aumentar el tamaño de la fuente */
     font-weight: bold;
-    padding: 16px 32px;
+    padding: 20px 40px; /* Aumentar el padding para hacerlo más grande */
     border: none;
-    border-radius: 50px;
+    border-radius: 10px; /* Hacerlo cuadrado con bordes redondeados menos pronunciados */
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
-    animation: pulse 1.5s infinite;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 30px rgba(255, 76, 76, 0.8); /* Sombra más intensa */
+    animation: pulse 1.2s infinite alternate; /* Pulsación más rápida */
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease; /* Transición más suave */
     margin-bottom: 40px;
-  }
+}
+
+#spinButton:hover {
+    transform: scale(1.1); /* Aumenta el tamaño del botón al hacer hover */
+    box-shadow: 0 0 40px rgba(255, 76, 76, 1); /* Aumenta el brillo de la sombra al hacer hover */
+    background: linear-gradient(45deg, #ff8c00, #ff4d4d, #ff8c00); /* Cambio de colores en hover */
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
   
   #spinButton:hover {
     transform: scale(1.05);
