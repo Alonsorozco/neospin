@@ -297,7 +297,7 @@ function setBetAmount() {
 function updateBalance() {
   const balanceEl = document.getElementById('player-balance');
   if (balanceEl) {
-    balanceEl.innerText = `Saldo: ${playerBalance.toLocaleString()} pts`;
+    balanceEl.innerText = `${playerBalance.toLocaleString()} pts`;
   }
 
   // Guardar el saldo en localStorage
@@ -865,7 +865,7 @@ function buySymbol(symbol, price) {
 
 
   function updateShopUI() {
-    document.getElementById('player-balance').innerText = `Puntos: ${playerBalance}`;
+    document.getElementById('player-balance').innerText = ` ${playerBalance} pts`;
     document.getElementById('owned-symbols').innerText = ` ${ownedSymbols.join(' ') || 'Ninguno'}`;
   }
 

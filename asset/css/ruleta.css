@@ -37,13 +37,14 @@ body {
   }
   
   .roulette {
-    width: 100%;
-    max-width: 400px;
-    height: 400px;
+    width: 90vw; /* 90% del ancho del viewport */
+    height: 90vw; /* Altura igual al ancho */
+    max-width: 400px; /* Máximo 400px en pantallas grandes */
+    max-height: 400px; /* Máximo 400px en pantallas grandes */
     margin: 0 auto 20px;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, #003366, #001a26); /* Azul oscuro a casi negro */
-    border: 10px solid #00ff99; /* Borde verde neón */
+    border-radius: 50%; /* Hace que sea un círculo */
+    background: radial-gradient(circle at center, #003366, #001a26);
+    border: 10px solid #00ff99;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,8 +57,10 @@ body {
       0 0 40px #00ffcc,
       0 0 60px #00ffcc inset;
     animation: pulseNeon 2s infinite ease-in-out;
+    overflow: hidden; /* Previene cualquier desbordamiento visual */
   }
   
+  /* Animación de neón */
   @keyframes pulseNeon {
     0%, 100% {
       box-shadow:
@@ -73,6 +76,80 @@ body {
     }
   }
   
+  /* Ajustes de tamaño para móviles */
+  @media (max-width: 768px) {
+    .roulette {
+      font-size: 16px;
+      border-width: 8px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .roulette {
+      font-size: 14px;
+      border-width: 6px;
+    }
+  }
+  
+  @media (max-width: 360px) {
+    .roulette {
+      font-size: 12px;
+      border-width: 5px;
+    }
+  }
+  
+  
+  
+  
+
+  .puntaje-digital {
+    width: 25rem; /* Desktop */
+    height: 5rem;
+    margin: 0 auto 20px;
+    background: radial-gradient(circle at center, #000000, #000000);
+    border: 2px solid #7ad645;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    text-shadow: 0 0 13px #0e0e0e, 0 0 20px #050505;
+    box-shadow:
+      0 0 20px #0e0e0e,
+      0 0 40px #0a0a0a,
+      0 0 60px #00ffcc inset;
+    animation: pulseNeon 2s infinite ease-in-out;
+  }
+  
+  /* Animación */
+  @keyframes pulseNeon {
+    0%, 100% {
+      box-shadow:
+        0 0 20px #080808,
+        0 0 40px #00ffcc,
+        0 0 60px #00ffcc inset;
+    }
+    50% {
+      box-shadow:
+        0 0 30px #00ffcc,
+        0 0 60px #00ffcc,
+        0 0 90px #00ffcc inset;
+    }
+  }
+  
+  /* Responsivo para móviles */
+  @media (max-width: 600px) {
+    .puntaje-digital {
+      width: 15rem; /* Más chico en mobile */
+      height: 4rem;
+      font-size: 16px; /* Texto un poco más pequeño */
+    }
+  }
+  
+  
   #grid-container {
     transition: opacity 0.3s ease, pointer-events 0.3s ease;
   }
@@ -82,72 +159,78 @@ body {
     opacity: 0.5;
   }
 
-  .progress-bar-container {
-    width: 100%;
-    height: 25px;
-    background-color: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .progress-bar {
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    line-height: 25px; /* Asegura que el texto esté centrado verticalmente */
-  }
-  
-  .custom-progress-bar {
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    line-height: 25px; /* Para la barra de símbolos también */
-  }
-  
-  /* Colores personalizados para la barra de progreso */
-.custom-progress-bar.low {
-  background-color: red; /* Rojo para baja progresión */
-}
 
-.custom-progress-bar.medium {
-  background-color: orange; /* Naranja para progresión media */
-}
 
-.custom-progress-bar.high {
-  background-color: green; /* Verde para alta progresión */
-}
 
-  
+/* Fondo animado para el contenedor de la cuadrícula */
 /* Fondo animado para el contenedor de la cuadrícula */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(10, 1fr); /* 10 columnas */
+  grid-template-columns: repeat(10, 1fr); /* PC: 10 columnas */
   gap: 10px;
   margin: 20px 0;
   padding: 20px;
   border-radius: 12px;
 
-  /* Fondo animado tipo neón */
   background: linear-gradient(270deg, #0fffc1, #3b00ff, #ff00c8, #00ffee);
   background-size: 800% 800%;
   animation: neonGridBackground 15s ease infinite;
 
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.4); /* Sombra general */
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
 }
 
 /* Animación del fondo */
 @keyframes neonGridBackground {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Ajustes RESPONSIVE para todos los celulares */
+@media (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(8, 1fr); /* Tablets grandes */
   }
 }
 
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(6, 1fr); /* Tablets normales */
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: repeat(5, 1fr); /* Celulares grandes */
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr); /* Celulares medianos */
+  }
+}
+
+@media (max-width: 360px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr); /* Celulares muy chicos */
+  }
+}
+
+
+
+  /* Colores personalizados para la barra de progreso */
+  .custom-progress-bar.low {
+    background-color: red; /* Rojo para baja progresión */
+  }
+  
+  .custom-progress-bar.medium {
+    background-color: orange; /* Naranja para progresión media */
+  }
+  
+  .custom-progress-bar.high {
+    background-color: green; /* Verde para alta progresión */
+  }
 
 /* Barra de progreso personalizada */
 .custom-progress-bar {
@@ -167,6 +250,7 @@ body {
 .custom-progress-bar.high {
   background: linear-gradient(to right, yellow, green);
 }
+
 
 
 
@@ -715,19 +799,41 @@ body {
 
 
   .btn-aleatorio {
-    background: linear-gradient(145deg, #ff1e00, #ff00ff);
-    color: white;
+    width: 15rem; /* Ajusta el tamaño que prefieras */
+    height: 50px; /* Ajusta el tamaño que prefieras */
+    background: linear-gradient(145deg, #ff1100, #ff8800);
+    color: rgb(3, 3, 3);
     border: none;
     font-weight: bold;
     border-radius: 8px;
-    box-shadow: 0 0 12px rgba(255, 38, 0, 0.8), 0 0 24px rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 12px rgba(0, 221, 255, 0.8), 0 0 24px rgba(0, 221, 255, 0.5);
     animation: sobreGlow 2s infinite ease-in-out;
     transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
+  .btn-box {
+    width: 12rem; /* Ajusta el tamaño que prefieras */
+    height: 2rem; /* Ajusta el tamaño que prefieras */
+    background: linear-gradient(145deg, #e5ff00, #00ddff);
+    color: rgb(0, 0, 0);
+    border: none;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0, 221, 255, 0.8), 0 0 24px rgba(0, 221, 255, 0.5);
+    animation: sobreGlow 2s infinite ease-in-out;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   
   .btn-sobre-sorpresa {
+    width: 15rem; /* Ajusta el tamaño que prefieras */
+    height: 50px; /* Ajusta el tamaño que prefieras */
     background: linear-gradient(145deg, #00aaff, #00ddff);
     color: white;
     border: none;
@@ -736,6 +842,9 @@ body {
     box-shadow: 0 0 12px rgba(0, 221, 255, 0.8), 0 0 24px rgba(0, 221, 255, 0.5);
     animation: sobreGlow 2s infinite ease-in-out;
     transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .btn-sobre-sorpresa:hover {
@@ -744,6 +853,8 @@ body {
   }
   
   .btn-sobre-venta {
+    width: 15rem;
+    height: 50px;
     background: linear-gradient(145deg, #00ff4c, #fffb00);
     color: rgb(20, 20, 20);
     border: none;
@@ -752,8 +863,11 @@ body {
     box-shadow: 0 0 12px rgba(0, 221, 255, 0.8), 0 0 24px rgba(0, 221, 255, 0.5);
     animation: sobreGlow 2s infinite ease-in-out;
     transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
-
+  
 
   
   

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NEONSPIN</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="asset/css/ruleta.css">
   <link rel="icon" type="asset/img/favicon.png" href="favicon.co">
 </head>
@@ -26,10 +28,10 @@
       Repetidos: <strong><span id="duplicateSymbolCount">0</span></strong>
     </span>
      <div class="text-center mt-4 ">
-      <button class="btn btn-warning btn-sobre-venta" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
+      <button class="btn  btn-box" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
     </div>
     <div class="text-center mt-4 ">
-    <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#slotModal">
+    <button class="btn btn-box" data-bs-toggle="modal" data-bs-target="#slotModal">
       🎰 Slot Machine
      </button>
     </div>
@@ -45,6 +47,7 @@
     <div id="countdown" class="countdown"></div>
     
     
+    <div class="puntaje-digital mt-3 " id="player-balance">Saldo: 1.500.000 pts</div>
     <div class="cuadro-gamer mt-4 p-4 text-center">
       
       <div>
@@ -52,7 +55,7 @@
       </div>
          <!-- Botones para elegir cantidad de números aleatorios -->
          <div id="quickBetDiv" style="display: none; margin-bottom: 10px">
-          <button id="quickBetButton" class="btn btn-aleatorio " onclick="quickBet()">🎲 Apuesta Rápida Aleatoria 50.000 pts</button>
+          <button id="quickBetButton" class="btn btn-aleatorio " onclick="quickBet()">🎲 Apuesta Rápida 50K pts</button>
         </div>
         
     
@@ -75,7 +78,6 @@
         <button id="cancelQuickBetBtn" type="button" class="btn btn-sobre-sorpresa" onclick="cancelQuickBet()">❌ Abandonar apuesta</button>
       </div>
 
-      <div class="balance-display mt-3" id="player-balance">Saldo: 1.500.000 pts</div>
     </div>
     
 
@@ -270,7 +272,11 @@
         ¿Cómo se juega?
       </button>
     </div>
-
+    <div class="text-center mt-4 ">
+    <button class="btn btn-sobre-venta" onclick="buySymbolPack()">
+      Sobre sorpresa🎁 1.500.000 Pts
+      </button>
+    </div>
     <div class="text-center mt-4 ">
       <button id="mute-toggle" class="btn btn-sm btn-outline-light">
          🔇 Silenciar
@@ -282,18 +288,12 @@
   
     
   
-    
-<!-- Modal de Inventario -->
+
 
 </div>
 
-
-      
    
-      <button class="btn btn-primary btn-sobre-sorpresa mt-3" onclick="buySymbolPack()">
-      Sobre sorpresa de 1 o mas simbolos aleatorios por 1.500.000 pts
-      🎁
-      </button>
+     
     </div>
   
   
