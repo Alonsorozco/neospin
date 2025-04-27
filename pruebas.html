@@ -14,25 +14,35 @@
 
   <script>
     // Esperar que Tone.js esté listo
-    Tone.start().then(() => {
-      console.log('Tone.js iniciado');
-    });
+// Crear un sintetizador
+const synth = new Tone.Synth().toDestination();
 
-    // Función que será llamada al hacer clic en el botón
-    document.getElementById("playSound").addEventListener("click", () => {
-      playSound();
-    });
+// Notas para el barrido de guitarra
+const notes = ["C4", "E4", "G4", "B4", "C5", "D5"];
 
-    // Función para reproducir el sonido
-    function playSound() {
-      // Crear un sintetizador
-      const synth = new Tone.Synth().toDestination();
+// Función para ejecutar el barrido de notas con aceleración
+function playSweep() {
+  let time = 0;
+  let increment = 0.2; // Tiempo inicial entre notas
+  let acceleration = 0.05; // Aceleración, reduce el tiempo entre notas
+  
+  // Barrido de notas con aceleración
+  notes.forEach((note) => {
+    synth.triggerAttackRelease(note, "8n", time); // "8n" es la duración de cada nota
+    time += increment;
+    increment = Math.max(increment - acceleration, 0.05); // Reducir el intervalo hasta un límite mínimo
+  });
+}
 
-      // Reproducir las notas
-      synth.triggerAttackRelease("C4", "8n");  // Nota C4
-      synth.triggerAttackRelease("E4", "8n", "+0.5");  // Nota E4 después de 0.5s
-      synth.triggerAttackRelease("G4", "8n", "+1");  // Nota G4 después de 1s
-    }
+// Manejador de eventos para el botón
+document.getElementById("playSound").addEventListener("click", () => {
+  // Iniciar Tone.js
+  Tone.start().then(() => {
+    playSweep(); // Ejecutar el barrido de notas
+  });
+});
+
+
   </script>
 </body>
 </html>

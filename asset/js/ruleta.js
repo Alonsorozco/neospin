@@ -396,7 +396,7 @@ function resetGame() {
     const gridContainer = document.getElementById('grid-container');
     const spinButton = document.getElementById('spinButton');
     spinButton.disabled = true; // Deshabilitar el botón
-    spinButton.style.cursor = 'not-allowed'; // Cambiar el cursor para indicar que está deshabilitado
+ 
     
       // Bloquear la grilla
     gridContainer.style.pointerEvents = 'none';  // Esto evitará cualquier interacción con la grilla
@@ -1775,6 +1775,72 @@ function playRandomScale() {
 
   // Definir las escalas posibles
   const scales = [
+
+
+    ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], // C Mayor
+    ["C#4", "D#4", "F4", "F#4", "G#4", "A#4", "B#4", "C#5"], // C# Mayor
+    ["D4", "E4", "F#4", "G4", "A4", "B4", "C5", "D5"], // D Mayor
+    ["D#4", "F4", "G4", "G#4", "A#4", "C5", "D5"], // D# Mayor
+    ["E4", "F#4", "G#4", "A4", "B4", "C#5", "D#5", "E5"], // E Mayor
+    ["F4", "G4", "A4", "Bb4", "C5", "D5", "E5", "F5"], // F Mayor
+    ["F#4", "G#4", "A#4", "B4", "C#5", "D#5", "E5", "F#5"], // F# Mayor
+    ["G4", "A4", "B4", "C5", "D5", "E5", "F#5", "G5"], // G Mayor
+    ["G#4", "A#4", "B#4", "C#5", "D#5", "F5", "G5"], // G# Mayor
+    ["A4", "B4", "C#5", "D5", "E5", "F#5", "G#5", "A5"], // A Mayor
+    ["A#4", "B#4", "C#5", "D#5", "E#5", "F#5", "G#5", "A#5"], // A# Mayor
+    ["B4", "C#5", "D#5", "E5", "F#5", "G#5", "A#5", "B5"], // B Mayor
+  
+    // Escalas menores naturales
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "Bb4", "C5"], // C Menor Natural
+    ["C#4", "D#4", "E4", "F#4", "G#4", "A4", "B4", "C#5"], // C# Menor Natural
+    ["D4", "E4", "F4", "G4", "A4", "Bb4", "C5", "D5"], // D Menor Natural
+    ["D#4", "F4", "F#4", "G#4", "A#4", "B4", "C5", "D#5"], // D# Menor Natural
+    ["E4", "F#4", "G4", "A4", "B4", "C5", "D5", "E5"], // E Menor Natural
+    ["F4", "G4", "Ab4", "Bb4", "C5", "Db5", "Eb5", "F5"], // F Menor Natural
+    ["F#4", "G#4", "A4", "B4", "C5", "D5", "E5", "F#5"], // F# Menor Natural
+    ["G4", "A4", "Bb4", "C5", "D5", "Eb5", "F5", "G5"], // G Menor Natural
+    ["G#4", "A#4", "B4", "C#5", "D#5", "E5", "F#5", "G#5"], // G# Menor Natural
+    ["A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5"], // A Menor Natural
+    ["A#4", "B#4", "C#5", "D#5", "E#5", "F#5", "G#5", "A#5"], // A# Menor Natural
+    ["B4", "C#5", "D#5", "E5", "F#5", "G5", "A5", "B5"], // B Menor Natural
+  
+    // Escalas menores armónicas
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "B4", "C5"], // C Menor Armónica
+    ["C#4", "D#4", "E4", "F#4", "G#4", "A4", "B5", "C#5"], // C# Menor Armónica
+    ["D4", "E4", "F4", "G4", "A4", "Bb4", "B4", "D5"], // D Menor Armónica
+    ["D#4", "F4", "F#4", "G#4", "A#4", "B4", "C6", "D#5"], // D# Menor Armónica
+    ["E4", "F#4", "G4", "A4", "B4", "C5", "D#5", "E5"], // E Menor Armónica
+    ["F4", "G4", "Ab4", "Bb4", "C5", "D5", "E5", "F5"], // F Menor Armónica
+    ["F#4", "G#4", "A4", "B4", "C5", "D#5", "E5", "F#5"], // F# Menor Armónica
+    ["G4", "A4", "Bb4", "C5", "D5", "Eb5", "F#5", "G5"], // G Menor Armónica
+    ["G#4", "A#4", "B4", "C#5", "D#5", "E5", "F#5", "G#5"], // G# Menor Armónica
+    ["A4", "B4", "C5", "D5", "E5", "F#5", "G5", "A5"], // A Menor Armónica
+    ["A#4", "B#4", "C#5", "D#5", "E#5", "F#5", "G#5", "A#5"], // A# Menor Armónica
+    ["B4", "C#5", "D#5", "E5", "F#5", "G#5", "A#5", "B5"], // B Menor Armónica
+  
+    // Escalas menores melódicas
+    ["C4", "D4", "Eb4", "F4", "G4", "A4", "B4", "C5"], // C Menor Melódica Ascendente
+    ["C#4", "D#4", "E4", "F#4", "G#4", "A#4", "B4", "C#5"], // C# Menor Melódica Ascendente
+    ["D4", "E4", "F4", "G4", "A4", "B4", "C#5", "D5"], // D Menor Melódica Ascendente
+    ["D#4", "F4", "F#4", "G#4", "A#4", "B#4", "C#5", "D#5"], // D# Menor Melódica Ascendente
+    ["E4", "F#4", "G4", "A4", "B4", "C#5", "D#5", "E5"], // E Menor Melódica Ascendente
+    ["F4", "G4", "A4", "Bb4", "C5", "D5", "E5", "F5"], // F Menor Melódica Ascendente
+    ["F#4", "G#4", "A4", "B4", "C5", "D#5", "E5", "F#5"], // F# Menor Melódica Ascendente
+    ["G4", "A4", "B4", "C5", "D5", "E5", "F#5", "G5"], // G Menor Melódica Ascendente
+    ["G#4", "A#4", "B4", "C#5", "D#5", "E#5", "F#5", "G#5"], // G# Menor Melódica Ascendente
+    ["A4", "B4", "C5", "D5", "E5", "F#5", "G#5", "A5"], // A Menor Melódica Ascendente
+    ["A#4", "B#4", "C#5", "D#5", "E#5", "F#5", "G#5", "A#5"], // A# Menor Melódica Ascendente
+    ["B4", "C#5", "D#5", "E5", "F#5", "G#5", "A#5", "B5"], // B Menor Melódica Ascendente
+  
+    // Escalas exóticas y modales (se pueden combinar con las tonalidades anteriores)
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "Bb4", "C5"], // Escala Frigia
+    ["C4", "D4", "E4", "F#4", "G4", "A4", "B4", "C5"], // Escala Lidia
+    ["C4", "D4", "E4", "F4", "G4", "A4", "Bb4", "C5"], // Escala Mixolidia
+    ["C4", "D4", "E4", "F#4", "G#4", "A4", "B4", "C5"], // Escala Locria
+    ["C4", "Db4", "E4", "F4", "G4", "Ab4", "Bb4", "C5"], // Escala Hindú
+    ["C4", "C#4", "D4", "E4", "F#4", "G4", "A4", "B4"], // Escala Hirajoshi
+    ["C4", "D4", "E4", "F4", "G4", "A4", "Bb4", "C5"], // Escala Menor Exótica
+    ["C4", "Db4", "Eb4", "F4", "G4", "Ab4", "B4", "C5"],
     // Escala Mayor
     ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], 
 
