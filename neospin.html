@@ -49,13 +49,23 @@
     </div>
   
     <div class="balance-display" id="player-balance">Saldo: 1.500.000 pts</div>
+    
+    
     <div class="cuadro-gamer mt-4 p-4 text-center">
-      
-      <button class="btn btn-sobre-sorpresa mb-3" onclick="toggleShopBox()">🔽 Menu</button>
-      <div style="text-align: center; margin-bottom: 10px;">
-        <button class="btn btn-info btn-sobre-sorpresa " onclick="$('#inventoryModal').modal('show')">🎒 Tu Mochila</button>
-      </div>
-  
+          <button class="btn btn-sobre-sorpresa mb-3" 
+                    onclick="toggleShopBox()" 
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="right" 
+                    title="Abre el menú para más opciones">🔽 Menu</button>
+    
+          <div style="text-align: center; margin-bottom: 10px;">
+            <button class="btn btn-info btn-sobre-sorpresa" 
+                    onclick="$('#inventoryModal').modal('show')" 
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="right" 
+                    title="Haz clic para ver tu Mochila">🎒 Tu Mochila</button>
+          </div>
+          
         <!-- Botones para elegir cantidad de números aleatorios -->
       <div id="quickBetDiv" style="display: none; margin-bottom: 10px">
         <button id="quickBetButton" class="btn btn-sobre-sorpresa" onclick="quickBet()">🎲 Apuesta Rápida Aleatoria 20.000 pts</button>
@@ -66,29 +76,29 @@
       </div>
     </div>
 
-      <div class="mt-3">
-        <label class="form-label">🎁 Avance para tu premio sorpresa</label>
-        <div class="progress" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
-          <div id="giftProgressBar" class="progress-bar" role="progressbar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
-            0%
-          </div>
+    <div id="progressSection" class="mt-3" style="display:none;">
+      <!-- Barra de progreso para el premio sorpresa -->
+      <label class="form-label">🎁 Avance para tu premio sorpresa</label>
+      <div class="progress" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
+        <div id="giftProgressBar" class="progress-bar" role="progressbar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
+          0%
         </div>
-      
-      
+      </div>
+    
+      <!-- Barra de progreso para completar los 36 símbolos -->
       <label class="form-label">Avance para completar los 36 símbolos</label>
       <div id="progress-container" style="width: 100%; background-color: #e0e0e0; height: 25px; border-radius: 10px;">
         <div id="uniqueSymbolProgressBar" class="custom-progress-bar" style="width: 0%; height: 100%; border-radius: 10px; text-align: center; color: white; font-weight: bold; line-height: 25px;">
           0%
         </div>
       </div>
-      
-      
-
     </div>
+    
+    
     
 
      <div class="grid-container" id="grid-container">NEONSPIN</div>
-     <p>NEONSPIN 1.1.0 NEONGAME ©Fabian Salas 2025</p>
+     
  
   <!-- Modal de apuesta -->
   <div class="modal fade" tabindex="-1" id="betModal" data-backdrop="true">
@@ -150,9 +160,10 @@
         </div>
       </div>
     </div>
-    <button class="futuristic-btn" id="betButton" onclick="startGame()">Iniciar Juego</button>
+    <button class="futuristic-btn mb-3" id="betButton" onclick="startGame()">Iniciar Juego</button>
+    <p>NEONSPIN 1.1.0 NEONGAME ©Fabian Salas 2025</p>
     </div>
-  
+     
   
     
     <!-- Modal inventario -->
@@ -245,6 +256,10 @@
         <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#slotModal">
          🎰 Slot Machine
         </button>
+    </div>
+    <div class="text-center mt-4">
+    <!-- Botón para abrir el modal con el historial -->
+        <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#gameStatsModal">Ver Historial de Partidas</button>
     </div>
   
     <div class="text-center mt-4 ">
@@ -547,55 +562,98 @@
       <div class="modal-body">
         <h6><strong>🎯 Objetivo del juego:</strong></h6>
         <p>
-          Tu misión es coleccionar los <strong>36 símbolos únicos</strong> disponibles en el juego. Cada uno tiene un valor y un significado especial.
+            Tu misión es coleccionar los <strong>36 símbolos únicos</strong> disponibles en el juego. Cada uno tiene un valor y un significado especial.
         </p>
-
+    
         <h6 class="mt-4"><strong>💰 Cómo ganar puntos:</strong></h6>
         <p>
-          Gira la ruleta y apuesta por un número. Si aciertas, ganas puntos.
+            Gira la ruleta y apuesta por un número. Si aciertas, ganas puntos.
         </p>
         <p>
-          Los puntos se usan para comprar sobres sorpresa o intercambiar símbolos.
+            Los puntos se usan para comprar sobres sorpresa o intercambiar símbolos.
         </p>
-
+    
         <h6 class="mt-4"><strong>📦 Sobres sorpresa:</strong></h6>
         <p>
-          Puedes comprar sobres que contienen <strong>entre 1 y 3 símbolos aleatorios</strong>. Estos sobres son una forma divertida de ampliar tu colección.
+            Puedes comprar sobres que contienen <strong>entre 1 y 3 símbolos aleatorios</strong>. Estos sobres son una forma divertida de ampliar tu colección.
         </p>
-
+    
+        <h6 class="mt-4"><strong>🎰 Máquina tragamonedas:</strong></h6>
+        <p>
+            También podrás usar la <strong>máquina tragamonedas</strong> para ganar <strong>3 símbolos aleatorios</strong> por un costo de <strong>3.000.000 puntos</strong>.
+        </p>
+        <p>
+            La máquina tiene 3 rodillos que giran y te otorgarán símbolos de manera aleatoria. ¡Atrévete a probar suerte!
+        </p>
+    
         <h6 class="mt-4"><strong>🔄 Intercambio de símbolos:</strong></h6>
         <p>
-          Utiliza tus puntos para <strong>vender o comprar símbolos</strong> y así completar tu colección más rápido.
+            Utiliza tus puntos para <strong>vender o comprar símbolos</strong> y así completar tu colección más rápido.
         </p>
-
+    
+        <h6 class="mt-4"><strong>🎮 Apuesta rápida:</strong></h6>
+        <p>
+            La <strong>apuesta rápida</strong> consta de 20 números aleatorios, cada uno con un costo de <strong>1000 puntos</strong>. Si aciertas, ganarás puntos y aumentarás tus posibilidades de conseguir símbolos.
+        </p>
+        <p>
+            Podrás seguir apostando unitariamente si prefieres hacerlo de forma más específica.
+        </p>
+    
+        <h6 class="mt-4"><strong>🎁 Símbolo gratis:</strong></h6>
+        <p>
+            Cada <strong>15 partidas jugadas</strong>, recibirás un <strong>símbolo gratis</strong> para ayudarte en tu misión de completar la colección. ¡Sigue jugando para obtener tu símbolo gratuito!
+        </p>
+    
         <h6 class="mt-4"><strong>🎒 Mochila del jugador:</strong></h6>
         <p>
-          Todos los símbolos que consigas se guardarán en tu <strong>mochila</strong>, donde podrás visualizarlos y gestionarlos.
+            Todos los símbolos que consigas se guardarán en tu <strong>mochila</strong>, donde podrás visualizarlos y gestionarlos.
+        </p>
+        <h6 class="mt-4"><strong>🎒 Mochila del jugador:</strong></h6>
+        <p>
+            Todos los símbolos que consigas se guardarán en tu <strong>mochila</strong>, donde podrás visualizarlos y gestionarlos.
         </p>
 
+        <h6 class="mt-4"><strong>🎮 Menú del juego:</strong></h6>
+        <p>
+            El <strong>menú</strong> es el centro de control de tu aventura. Desde él, podrás acceder a todas las funcionalidades importantes del juego. 
+            A través del menú, puedes:
+        </p>
+        <ul>
+            <li><strong>Visualizar tu mochila:</strong> Accede a tu <strong>mochila del jugador</strong> para ver y gestionar los símbolos que has coleccionado.</li>
+            <li><strong>Ver estadísticas:</strong> Consulta tus estadísticas de juego, incluyendo las partidas ganadas, perdidas y los puntos acumulados.</li>
+            <li><strong>Comprar y vender símbolos:</strong> Utiliza tus puntos para comprar sobres, intercambiar o vender símbolos.</li>
+            <li><strong>Acceder a la ayuda:</strong> Consulta las reglas del juego y recibe instrucciones sobre cómo ganar y gestionar tus símbolos.</li>
+            <li><strong>Configurar el juego:</strong> Ajusta las opciones del juego para personalizar tu experiencia.</li>
+        </ul>
+        <p>
+            El menú te proporciona todo lo necesario para disfrutar del juego y avanzar en tu misión de coleccionar los símbolos más raros y valiosos.
+        </p>
+
+    
         <h6 class="mt-4"><strong>✨ Recuerda:</strong></h6>
         <p>Tu objetivo final es completar la colección completa de símbolos.</p>
         <p>Entre más raro el símbolo, más valioso será.</p>
         <p>Juega estratégicamente para reunir puntos y conseguir los más difíciles.</p>
-
+    
         <h6 class="mt-4"><strong>Derechos</strong></h6>
         <p>
-          Todos los derechos del juego corresponden a ©Fabian Salas Orozco 2025 Ingeniero y progamador del juego.
+            Todos los derechos del juego corresponden a ©Fabian Salas Orozco 2025 Ingeniero y programador del juego.
         </p>
         <div class="text-center mb-3">
-          <button class="btn btn-warning btn-sobre-reinicio" 
-          id="backButton" 
-          onclick="goBack()" 
-          title="¡Perderás todos los tus puntos Ganados y Simbolos!"
-            >
-          Reiniciar Juego perdera todos los simbolos y puntos.
-          </button>
+            <button class="btn btn-warning btn-sobre-reinicio" 
+                id="backButton" 
+                onclick="goBack()" 
+                title="¡Perderás todos tus puntos ganados y símbolos!">
+                Reiniciar Juego perderás todos los símbolos y puntos.
+            </button>
         </div>
-          <!-- Footer con botón cerrar -->
-          <div class="modal-footer justify-content-center">
-            <button type="button" class="btn  btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
-         </div> 
-      </div>
+    
+        <!-- Footer con botón cerrar -->
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-sobre-sorpresa" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+    
 
     </div>
   </div>
@@ -679,6 +737,25 @@
   </div>
 </div>
 
+<!-- Modal para mostrar las estadísticas del juego -->
+<div class="modal fade" id="gameStatsModal" tabindex="-1" aria-labelledby="gameStatsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gameStatsModalLabel">Estadísticas del Juego</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="gameStatsContainer" class="game-stats">
+            <p><strong>Partidas Ganadas:</strong> <span id="partidasGanadas">0</span></p>
+            <p><strong>Partidas Perdidas:</strong> <span id="partidasPerdidas">0</span></p>
+            <p><strong>Puntos Apostados:</strong> <span id="puntosApostados">0</span> pts</p>
+            <p><strong>Puntos Perdidos:</strong> <span id="puntosPerdidos">0</span> pts</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

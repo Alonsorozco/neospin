@@ -91,13 +91,19 @@ body {
   }
   
   .progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #4caf50;
-    transition: width 0.5s;
-    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 25px; /* Asegura que el texto esté centrado verticalmente */
   }
-
+  
+  .custom-progress-bar {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 25px; /* Para la barra de símbolos también */
+  }
+  
   /* Colores personalizados para la barra de progreso */
 .custom-progress-bar.low {
   background-color: red; /* Rojo para baja progresión */

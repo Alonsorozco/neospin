@@ -309,8 +309,8 @@ function updateBalance() {
     document.getElementById("quickBetDiv").style.display = 'block';
     document.getElementById('betButton').style.display = 'none';
     document.getElementById('backButton').style.display = 'inline-block';
-  
-  
+    
+    
     // 🔁 RESETEO CORRECTO
     selectedBets = {};
     selectedNumber = null;
@@ -330,7 +330,7 @@ function updateBalance() {
   
     // Mostrar el botón para girar ruleta manualmente
     document.getElementById('spinButton').style.display = 'inline-block';
-
+    document.getElementById('progressSection').style.display = 'block';
     const quickDiv = document.getElementById('canceldiv');
     if (quickDiv) {
       quickDiv.style.display = 'block';
@@ -418,22 +418,31 @@ function resetGame() {
   
     // Elegir el número final con más probabilidad entre los apostados
     let finalNumber = weightedNumbers[Math.floor(Math.random() * weightedNumbers.length)];
+  // Simular la animación del giro (puedes personalizarla)
+  let spinInterval = setInterval(() => {
+    let randomDisplay = matrixNumbers[Math.floor(Math.random() * matrixNumbers.length)];
+    display.innerText = `${randomDisplay}`; // Aquí muestra el número que está girando
+    
+    // Aumentar el tamaño del número durante la animación
+    display.style.fontSize = "70px"; // Tamaño durante el giro
+    
+    spinTime += 100;
   
-    // Simular la animación del giro (puedes personalizarla)
-    let spinInterval = setInterval(() => {
-      let randomDisplay = matrixNumbers[Math.floor(Math.random() * matrixNumbers.length)];
-      display.innerText = `Girando... ${randomDisplay}`;
-      spinTime += 100;
-      if (spinTime >= 2000) { // 2 segundos de giro
-        clearInterval(spinInterval);
-        display.innerText = `Número ganador: ${finalNumber}`;
+    if (spinTime >= 2000) { // 2 segundos de giro
+      clearInterval(spinInterval);
+      display.innerText = `Número ganador: ${finalNumber}`; // Muestra el número ganador al finalizar el giro
+      
+      // Aumentar el tamaño del número ganador
+      display.style.fontSize = "70px"; // Tamaño para el número ganador
   
-        // 🔁 Iniciar nueva ronda automáticamente después de mostrar el resultado
-        setTimeout(() => {
-          startGame();
-        }, 8000); // Esperar 3 segundos para mostrar el número antes de reiniciar
-      }
-    }, 100);
+      // 🔁 Iniciar nueva ronda automáticamente después de mostrar el resultado
+      setTimeout(() => {
+        // Restaurar el tamaño original después de mostrar el número ganador
+        display.style.fontSize = "20px"; // Aquí puedes poner el tamaño original que deseas
+        startGame(); // Reinicia el juego
+      }, 8000); // Esperar 8 segundos para mostrar el número antes de reiniciar
+    }
+  }, 100);
   
     // Iniciar animación de la ruleta
     rouletteInterval = setInterval(() => {
@@ -452,110 +461,148 @@ function resetGame() {
 
   let partidasJugadas = 0; // Contador de partidas global
   let simbolosJugador = []; // Si ya usas ownedSymbols, este puede omitirse
-  
-  function finishGame(winningNumber) {
-    const gridButtons = document.querySelectorAll('#grid-container button');
-    gridButtons.forEach(btn => {
-      if (parseInt(btn.dataset.number) === winningNumber) {
-        btn.classList.add('winner');
-      }
-    });
-  
-    const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
-    if (playerBalance < 0) playerBalance = 0;
-    updateBalance();
-  
-    const winSound = document.getElementById('click-sound');
-    const loseSound = document.getElementById('lose-sound');
-  
-    if (selectedBets[winningNumber]) {
-      const winAmount = selectedBets[winningNumber] * 100;
-      totalWon += winAmount;
-      playerBalance += winAmount;
-      updateBalance();
-      saveToStorage();
-  
-      winSound.currentTime = 0;
-      winSound.play();
-  
-      showResultModal(`🎉 ¡Ganaste!<br>
-                       Número: ${winningNumber}<br>
-                       Premio: ${winAmount.toLocaleString()} pts<br>
-                       Apostado: ${totalBet.toLocaleString()} pts<br>
-                       Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
-    } else {
-      totalLost += totalBet;
-      saveToStorage();
-  
-      loseSound.currentTime = 0;
-      loseSound.play();
-  
-      showResultModal(`😢 Perdiste.<br>
-                       Número ganador: ${winningNumber}<br>
-                       Apostado: ${totalBet.toLocaleString()} pts<br>
-                       Perdido: ${totalBet.toLocaleString()} pts<br>
-                       Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
-    }
-  
-    // Reactivar botones después de la animación
-setTimeout(() => {
-  // Reactivar botones
-  ['spinButton', 'cancelQuickBetBtn', 'quickBetButton'].forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.disabled = false;
-      btn.classList.remove('disabled');
+  let puntosGanados = 0;  // Total de puntos ganados
+  let partidasGanadas = 0; // Contador de partidas ganadas
+  let partidasPerdidas = 0; // Contador de partidas perdidas
+  let puntosApostados = 0; // Total de puntos apostados
+  let puntosPerdidos = 0; // Total de puntos perdidos
+
+// Inicializar totalBetGlobal desde localStorage, si existe, o 0 si no.
+let totalBetGlobal = localStorage.getItem('totalBetGlobal') ? parseInt(localStorage.getItem('totalBetGlobal')) : 0;
+
+function finishGame(winningNumber) {
+  const gridButtons = document.querySelectorAll('#grid-container button');
+  gridButtons.forEach(btn => {
+    if (parseInt(btn.dataset.number) === winningNumber) {
+      btn.classList.add('winner');
     }
   });
 
-  // Reactivar la grilla después de la animación
-  const gridContainer = document.getElementById('grid-container');
-  if (gridContainer) {
-    gridContainer.style.pointerEvents = 'auto';  // Permitir la interacción con la grilla
-    gridContainer.style.opacity = '1';  // Restaurar la opacidad normal de la grilla
+  const totalBet = Object.values(selectedBets).reduce((acc, val) => acc + val, 0);
+  puntosApostados += totalBet;  // Actualizar puntos apostados
+
+  // Acumular total apostado global
+  totalBetGlobal += totalBet;
+
+  // Guardar total apostado global en localStorage
+  localStorage.setItem('totalBetGlobal', totalBetGlobal);
+
+  if (playerBalance < 0) playerBalance = 0;
+  updateBalance();
+
+  const winSound = document.getElementById('click-sound');
+  const loseSound = document.getElementById('lose-sound');
+
+  if (selectedBets[winningNumber]) {
+    const winAmount = selectedBets[winningNumber] * 100;
+    totalWon += winAmount;
+    playerBalance += winAmount;
+    partidasGanadas++;  // Aumentar contador de partidas ganadas
+    updateBalance();
+    saveToStorage();
+
+    winSound.currentTime = 0;
+    winSound.play();
+    const realWonAmount = winAmount - totalBet; 
+    showResultModal(`🎉 ¡Ganaste!<br>
+                     Número: ${winningNumber}<br>
+                     Premio: ${winAmount.toLocaleString()} pts<br>
+                     Apostado: ${totalBet.toLocaleString()} pts<br>
+                     Puntos ganados: ${realWonAmount.toLocaleString()} pts<br>
+                     Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
+
+  } else {
+    totalLost += totalBet;
+    puntosPerdidos += totalBet;  // Actualizar puntos perdidos
+    partidasPerdidas++;  // Aumentar contador de partidas perdidas
+    saveToStorage();
+
+    loseSound.currentTime = 0;
+    loseSound.play();
+
+    showResultModal(`😢 Perdiste.<br>
+                     Número ganador: ${winningNumber}<br>
+                     Apostado: ${totalBet.toLocaleString()} pts<br>
+                     Perdido: ${totalBet.toLocaleString()} pts<br>
+                     Saldo actual: ${playerBalance.toLocaleString()} pts`, 0);
   }
-}, 3500);
 
-  
-    // Resetear estado de apuesta
-    quickBetUsed = false;
-    quickBetPending = false;
-    wasBetConfirmed = false;
-    previousQuickBetCost = 0;
-    selectedNumbers = [];
-    isQuickBet = false;
-    selectedBets = {};
-    quickBetRefunded = false;
-  
-    // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
-    partidasJugadas++;
-    updateGiftProgressBar();
-  
-    if (partidasJugadas % 15 === 0) {
-      const simbolos = Object.keys(symbolValues);
-      const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
-      const valor = symbolValues[simboloRegalado];
-  
-      ownedSymbols.push(simboloRegalado); // Añadir al inventario
-      saveToStorage();                   // Guardar
-      updateInventory();                // Mostrar en pantalla
-      updateUniqueSymbolProgressBar()
-      
-  
-      showPrizeModal(
-        `🎁 ¡Has Ganado un premio por partidas cumplidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
-        simboloRegalado
+  // Actualizar las estadísticas de la pantalla
+  updateGameStats();
 
-    
+  // Reactivar botones después de la animación
+  setTimeout(() => {
+    ['spinButton', 'cancelQuickBetBtn', 'quickBetButton'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('disabled');
+      }
+    });
 
-      );
-    
+    const gridContainer = document.getElementById('grid-container');
+    if (gridContainer) {
+      gridContainer.style.pointerEvents = 'auto';
+      gridContainer.style.opacity = '1';
     }
+  }, 3500);
+
+  // Resetear estado de apuesta
+  quickBetUsed = false;
+  quickBetPending = false;
+  wasBetConfirmed = false;
+  previousQuickBetCost = 0;
+  selectedNumbers = [];
+  isQuickBet = false;
+  selectedBets = {};
+  quickBetRefunded = false;
+
+  // 🎁 SISTEMA DE REGALO CADA 10 PARTIDAS
+  partidasJugadas++;
+  updateGiftProgressBar();
+
+  if (partidasJugadas % 15 === 0) {
+    const simbolos = Object.keys(symbolValues);
+    const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
+    const valor = symbolValues[simboloRegalado];
+
+    ownedSymbols.push(simboloRegalado); // Añadir al inventario
+    saveToStorage();                   // Guardar
+    updateInventory();                // Mostrar en pantalla
+    updateUniqueSymbolProgressBar();
+
+    showPrizeModal(
+      `🎁 ¡Has Ganado un premio por partidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
+      simboloRegalado
+    );
   }
-  
-  
+}
+
+
+// Función para actualizar las estadísticas de la pantalla
+function updateGameStats() {
+  // Calcular la diferencia entre lo ganado y lo apostado
+
+  const realTotalWon = totalWon - totalBetGlobal; // Total ganado real (lo ganado - lo apostado)
+
+  const statsContainer = document.getElementById('gameStatsContainer');
+  statsContainer.innerHTML = `
+      <p><strong>Balance:</strong> ${playerBalance.toLocaleString()} pts</p>
+      <p><strong>Total Ganado:</strong> ${totalWon.toLocaleString()} pts</p>
+      <p><strong>Total Perdido:</strong> ${totalLost.toLocaleString()} pts</p>
+      <p><strong>Total Apostado:</strong> ${totalBetGlobal.toLocaleString()} pts</p> <!-- Total Apostado -->
+      <p><strong>Total Ganado Real:</strong> ${realTotalWon.toLocaleString()} pts</p> <!-- Total Ganado Real -->
+      <p><strong>Partidas Jugadas:</strong> ${partidasJugadas}</p>
+      <p><strong>Símbolos Propios:</strong> ${ownedSymbols.length}</p>
+  `;
+}
+
+
   
 
+
+// Inicializamos totalBet desde localStorage, si existe, o 0 si no.
+let totalBet = localStorage.getItem('totalBet') ? parseInt(localStorage.getItem('totalBet')) : 0;
 
 function placeBet(number, amount) {
   if (amount > playerBalance) {
@@ -566,6 +613,17 @@ function placeBet(number, amount) {
   if (!selectedBets[number]) selectedBets[number] = 0;
   selectedBets[number] += amount;
   playerBalance -= amount; // Descontar aquí también es válido si prefieres
+
+  // Acumular el total apostado
+  totalBet += amount;
+
+  // Guardar el nuevo total apostado en localStorage
+  localStorage.setItem('totalBet', totalBet);
+
+  // Actualizar las estadísticas
+  updateGameStats();
+  
+  // Actualizar el balance después de la apuesta
   updateBalance();
 }
 
@@ -598,18 +656,32 @@ function placeBet(number, amount) {
 
 
   function loadFromStorage() {
-    const savedBalance = localStorage.getItem('playerBalance');
-    const savedSymbols = localStorage.getItem('ownedSymbols');
-    const savedTotalWon = localStorage.getItem('totalWon');
-    const savedTotalLost = localStorage.getItem('totalLost');
+    // Revisar si hay datos en localStorage
+    if (localStorage.getItem('playerBalance')) {
+        playerBalance = parseInt(localStorage.getItem('playerBalance')) || 1500000;  // Valor por defecto de 1000
+    }
+    
+    if (localStorage.getItem('totalWon')) {
+        totalWon = parseInt(localStorage.getItem('totalWon')) || 0;
+    }
 
-    playerBalance = savedBalance ? parseInt(savedBalance) : 1500000; // Establece 1.000.000 si no hay saldo guardado
-    ownedSymbols = savedSymbols ? JSON.parse(savedSymbols) : [];
-    totalWon = savedTotalWon ? parseInt(savedTotalWon) : 0;
-    totalLost = savedTotalLost ? parseInt(savedTotalLost) : 0;
-    partidasJugadas = parseInt(localStorage.getItem('partidasJugadas')) || 0;
+    if (localStorage.getItem('totalLost')) {
+        totalLost = parseInt(localStorage.getItem('totalLost')) || 0;
+    }
+
+    if (localStorage.getItem('partidasJugadas')) {
+        partidasJugadas = parseInt(localStorage.getItem('partidasJugadas')) || 0;
+    }
+
+    if (localStorage.getItem('ownedSymbols')) {
+        ownedSymbols = JSON.parse(localStorage.getItem('ownedSymbols')) || [];
+    }
+
+    // Llamar a la función para actualizar las estadísticas después de cargar los datos
+    updateGameStats();
     updateGiftProgressBar();
-  }
+}
+
 
   function saveToStorage() {
     localStorage.setItem('playerBalance', playerBalance);
@@ -816,25 +888,31 @@ function buySymbol(symbol, price) {
     ownedSymbols = [];
     selectedBets = {};
     matrixNumbers = [];
-    
+    partidasJugadas = 0; // Restablecer el contador de partidas jugadas
+  
     // Limpiar el almacenamiento local
     localStorage.removeItem('playerBalance');
     localStorage.removeItem('ownedSymbols');
     localStorage.removeItem('totalWon');
     localStorage.removeItem('totalLost');
-    
+    localStorage.removeItem('partidasJugadas'); // Limpiar el valor de partidasJugadas en localStorage
+    // Resetear el total apostado
+    resetTotalBetGlobal();  // Aquí reinicias el total apostado
     // Volver a generar la matriz de números
     generateMatrix();
-    
+  
     // Actualizar la interfaz de usuario
     updateBalance();
     updateShopUI();
     updateUniqueSymbolCount();
-    
+  
+    // Restablecer la barra de progreso del regalo
+    updateGiftProgressBar(); // Llamar a la función para actualizar la barra después de restablecer
+  
     // Si hay un modal o mensaje de resultado, ocultarlo
     $('#resultModal').modal('hide');
-    
   }
+  
 
 function openInventoryModal() {
     const inventoryContainer = document.getElementById('inventory-symbols');
@@ -1432,10 +1510,12 @@ document.querySelectorAll('.bet-btn').forEach(button => {
 });
 
 
+
 function updateGiftProgressBar() {
   const bar = document.getElementById('giftProgressBar');
-  const current = partidasJugadas % 15; // Cambio de 10 a 15 partidas
-  const percent = (current / 15) * 100; // Calcula el porcentaje según 15 partidas
+  const totalPartidas = 15; // El número de partidas después del cual se reinicia
+  const current = partidasJugadas % totalPartidas; // Reinicia cada 15 partidas
+  const percent = (current / totalPartidas) * 100; // Calcula el porcentaje
 
   // Actualiza el ancho de la barra en porcentaje
   bar.style.width = `${percent}%`;
@@ -1444,7 +1524,7 @@ function updateGiftProgressBar() {
   // Actualiza el texto dentro de la barra en porcentaje
   bar.textContent = `${Math.round(percent)}%`;
 
-  // Opcional: cambia color si llega a 15 partidas
+  // Cambiar el color y el texto si se llega a 15
   if (current === 0 && partidasJugadas !== 0) {
     bar.classList.remove('bg-success');
     bar.classList.add('bg-warning');
@@ -1453,9 +1533,9 @@ function updateGiftProgressBar() {
     bar.classList.remove('bg-warning');
     bar.classList.add('bg-success');
   }
+  // Guardar el progreso en localStorage
+  localStorage.setItem('partidasJugadas', partidasJugadas);
 }
-
-
 
 
 
@@ -1586,3 +1666,17 @@ function updateUniqueSymbolCount() {
   }
 }
 
+
+// Inicializar los tooltips
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  var tooltipList = [...tooltipTriggerList].map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+
+function resetTotalBetGlobal() {
+  totalBetGlobal = 0;  // Restablecer la variable global
+  localStorage.removeItem('totalBetGlobal');  // Eliminar el valor almacenado en localStorage
+  updateGameStats();  // Actualizar la interfaz si es necesario
+}
