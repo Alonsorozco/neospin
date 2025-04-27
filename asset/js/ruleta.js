@@ -375,6 +375,8 @@ function resetGame() {
   function startRouletteSpin() {
     let display = document.getElementById('rouletteDisplay');
     let spinTime = 0;
+
+
   
     // 🔒 Desactivar "Apuesta Rápida" al iniciar el giro
     const quickBetButton = document.getElementById('quickBetButton');
@@ -434,7 +436,7 @@ function resetGame() {
       
       // Aumentar el tamaño del número ganador
       display.style.fontSize = "70px"; // Tamaño para el número ganador
-  
+
       // 🔁 Iniciar nueva ronda automáticamente después de mostrar el resultado
       setTimeout(() => {
         // Restaurar el tamaño original después de mostrar el número ganador
@@ -503,12 +505,11 @@ function finishGame(winningNumber) {
 
     winSound.currentTime = 0;
     winSound.play();
-    const realWonAmount = winAmount - totalBet; 
+   
     showResultModal(`🎉 ¡Ganaste!<br>
                      Número: ${winningNumber}<br>
                      Premio: ${winAmount.toLocaleString()} pts<br>
                      Apostado: ${totalBet.toLocaleString()} pts<br>
-                     Puntos ganados: ${realWonAmount.toLocaleString()} pts<br>
                      Saldo actual: ${playerBalance.toLocaleString()} pts`, winAmount);
 
   } else {
@@ -529,6 +530,8 @@ function finishGame(winningNumber) {
 
   // Actualizar las estadísticas de la pantalla
   updateGameStats();
+  
+ 
 
   // Reactivar botones después de la animación
   setTimeout(() => {
@@ -582,8 +585,8 @@ function finishGame(winningNumber) {
 // Función para actualizar las estadísticas de la pantalla
 function updateGameStats() {
   // Calcular la diferencia entre lo ganado y lo apostado
-
-  const realTotalWon = totalWon - totalBetGlobal; // Total ganado real (lo ganado - lo apostado)
+ 
+  const realTotalWon = Math.max(totalWon - totalLost, 0);// Total ganado real (lo ganado - lo apostado)
 
   const statsContainer = document.getElementById('gameStatsContainer');
   statsContainer.innerHTML = `
@@ -1200,15 +1203,15 @@ function showResultModal(message, amount) {
 
 
 
-  document.addEventListener('DOMContentLoaded', () => { 
+  document.addEventListener('DOMContentLoaded', () => {
     const clickSound = document.getElementById('click-sound');
     const muteButton = document.getElementById('mute-toggle');
     let isMuted = false;
+    
+    // Establecer volumen inicial del sonido de clic
+    clickSound.volume = 0.2;  // Establecer volumen inicial a 20%
   
-    // Establecer volumen inicial
-    clickSound.volume = 0.2;  // Establecer volumen inicial a 50%
-  
-    // Reproducir sonido al hacer clic en botones
+    // Reproducir sonido de clic al hacer clic en botones (si no está muteado)
     document.addEventListener('click', (e) => {
       if ((e.target.tagName === 'BUTTON' || e.target.closest('button')) && !isMuted) {
         clickSound.currentTime = 0;  // Reiniciar al inicio
@@ -1221,14 +1224,17 @@ function showResultModal(message, amount) {
       isMuted = !isMuted;
       muteButton.innerText = isMuted ? '🔈 Activar sonido' : '🔇 Silenciar';
   
-      // Aplicar el estado de mute
+      // Aplicar mute en Tone.js y sonido de clic
       if (isMuted) {
-        clickSound.volume = 0;  // Silenciar
+        clickSound.volume = 0;  // Silenciar sonido de clic
+        Tone.context.mute = true; // Silenciar Tone.js
       } else {
-        clickSound.volume = 0.5;  // Restaurar volumen a 50%
+        clickSound.volume = 0.2;  // Restaurar volumen de clic
+        Tone.context.mute = false; // Restaurar Tone.js
       }
     });
   });
+  
   
   function playSlot() {
     const spinCost = 3000000;
@@ -1679,4 +1685,199 @@ function resetTotalBetGlobal() {
   totalBetGlobal = 0;  // Restablecer la variable global
   localStorage.removeItem('totalBetGlobal');  // Eliminar el valor almacenado en localStorage
   updateGameStats();  // Actualizar la interfaz si es necesario
+}
+
+
+// 🎁 SISTEMA DE REGALO CADA 1.500.000 PUNTOS PERDIDOS
+function verificarRegaloPorPerdida() {
+  // Verifica si se ha alcanzado el umbral de 1.500.000 puntos perdidos
+  if (acumuladorPerdidas >= 1500000) {
+    const simbolos = Object.keys(symbolValues); // Lista de símbolos disponibles
+    const simboloRegalado = simbolos[Math.floor(Math.random() * simbolos.length)];
+    const valor = symbolValues[simboloRegalado]; // Valor del símbolo regalado
+
+    ownedSymbols.push(simboloRegalado);  // Añadir al inventario del jugador
+    acumuladorPerdidas = 0;  // Resetear el acumulador de pérdidas a 0 después de regalar el símbolo
+    saveToStorage();  // Guardar el progreso
+
+    // Actualizar la interfaz del inventario y el progreso de los símbolos
+    updateInventory(); 
+    updateUniqueSymbolProgressBar();
+
+    // Mostrar el modal de premio
+    showPrizeModal(
+      `🎁 ¡Has Ganado un símbolo por pérdidas!<br>Te regalamos el símbolo <strong>${simboloRegalado}</strong><br>Valor: ${valor.toLocaleString()} pts`,
+      simboloRegalado
+    );
+  }
+
+   // Verificar si se ha alcanzado el umbral de pérdidas y regalar símbolo
+   verificarRegaloPorPerdida();
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const spinButton = document.querySelector('#spinButton');
+  
+  if (spinButton) {
+    spinButton.addEventListener('click', () => {
+      Tone.start().then(() => {
+        console.log("AudioContext iniciado correctamente.");
+        playRandomScale();
+      });
+    });
+  } else {
+    console.log("No se encontró el botón con id 'spinButton'.");
+  }
+});
+
+// Función para reproducir el sonido de la ruleta
+function playRandomScale() {
+  // Detener cualquier secuenciador o transporte previo
+  Tone.Transport.cancel();  // Elimina las programaciones previas
+
+  // Crear efectos
+   // Crear efectos
+   const reverb = new Tone.Reverb(9).toDestination();  // Reverberación con duración larga
+   const eq = new Tone.EQ3({
+     low: 0.5,    // Refuerzo en bajos
+     mid: 0.8,    // Refuerzo en medios
+     high: 0.9,   // Refuerzo en agudos
+   }).toDestination();
+ 
+   // Usar Tone.FMSynth con una envolvente más detallada y ajustes de modulación
+   const synth = new Tone.AMSynth({
+     modulationIndex: 20,  // Modulación de frecuencia más agresiva
+     harmonicity: 2,      // Armonicidad para un tono más rico
+     envelope: {
+       attack: 0.05,   // Ataque rápido
+       decay: 0.1,     // Decaimiento corto
+       sustain: 0.6,   // Mantener la nota
+       release: 0.2    // Liberación más suave
+     },
+     modulationEnvelope: {
+       attack: 0.05,
+       decay: 0.2,
+       sustain: 0.5,
+       release: 0.3
+     },
+   }).connect(reverb).connect(eq);
+ 
+ 
+  // Controlar el volumen
+  synth.volume.value = -14;
+
+  // Definir las escalas posibles
+  const scales = [
+    // Escala Mayor
+    ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Menor Natural
+    ["C4", "D4", "Eb4", "F4", "G4", "A4", "Bb4", "C5"], 
+
+    // Escala Menor Harmónica
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "B4", "C5"], 
+
+    // Escala Menor Melódica Ascendente
+    ["C4", "D4", "Eb4", "F4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Lidia
+    ["C4", "D4", "E4", "F#4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Mixolidia
+    ["C4", "D4", "E4", "F4", "G4", "A4", "Bb4", "C5"], 
+
+    // Escala Frigia
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "Bb4", "C5"], 
+
+    // Escala Dórica
+    ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Locria
+    ["C4", "D4", "Eb4", "F4", "G4", "Ab4", "Bb4", "C5"], 
+
+    // Escala Mayor Pentatónica
+    ["C4", "D4", "E4", "G4", "A4", "C5"], 
+
+    // Escala Menor Pentatónica
+    ["C4", "Eb4", "F4", "G4", "Bb4", "C5"], 
+
+    // Escala de Blues (Menor Pentatónica con la quinta disminuida)
+    ["C4", "Eb4", "F4", "F#4", "G4", "Bb4", "C5"], 
+
+    // Escala Bebop Mayor
+    ["C4", "D4", "E4", "F4", "F#4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Bebop Menor
+    ["C4", "D4", "Eb4", "E4", "F4", "G4", "A4", "Bb4", "C5"], 
+
+    // Escala Jazz Melódica Menor
+    ["C4", "D4", "Eb4", "F4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Double Harmónica
+    ["C4", "Db4", "E4", "F4", "G4", "Ab4", "B4", "C5"], 
+
+    // Escala Octatónica (Escala disminuida)
+    ["C4", "D4", "D#4", "F4", "F#4", "G#4", "A4", "B4"], 
+
+    // Escala Whole Tone
+    ["C4", "D4", "E4", "F#4", "G#4", "A#4"], 
+
+    // Escala de Gipsy
+    ["C4", "D4", "E4", "F4", "F#4", "G#4", "A4", "B4", "C5"], 
+
+    // Escala de Enarmónica
+    ["C4", "D4", "E4", "F#4", "G#4", "A#4", "C5"],
+
+    // Escala India (Raga)
+    ["C4", "D4", "E4", "F#4", "G4", "A4", "B4", "C5"], 
+
+    // Escala Doble Armónica (más exótica)
+    ["C4", "Db4", "Eb4", "F4", "G4", "Ab4", "B4", "C5"], 
+
+    // Escala Hirajoshi (escala japonesa)
+    ["C4", "D4", "F4", "G4", "A4", "C5"],
+
+    // Escala Enigmatic (Escala mística)
+    ["C4", "D4", "Eb4", "F#4", "G#4", "A#4", "B4", "C5"],
+
+    // Escala Española
+    ["C4", "D4", "E4", "F4", "F#4", "G4", "A4", "Bb4", "C5"], 
+
+    // Escala de Terceras Mayores
+    ["C4", "E4", "G4", "B4", "C5", "D5"],
+
+    // Escala Ascendente y Descendente Lidia
+    ["C4", "D4", "E4", "F#4", "G4", "A4", "B4", "C5", "B4", "A4", "G4", "F#4", "F4", "E4", "D4", "C4"]
+];
+
+
+  // Seleccionar una escala aleatoria
+  const randomScale = scales[Math.floor(Math.random() * scales.length)];
+
+  // Decidir si la secuencia es ascendente o descendente
+  const isAscending = Math.random() > 0.6; // 50% de probabilidad para ser ascendente o descendente
+  const scale = isAscending ? randomScale : randomScale.slice().reverse(); // Si es descendente, invierte la escala
+
+  // Duración de cada nota (negra)
+  const duration = "18n"; 
+  let timeOffset = 3; // Tiempo inicial para la primera nota
+
+  // Reproducir las notas con un intervalo
+  scale.forEach((note, index) => {
+    Tone.Transport.schedule((time) => {
+      synth.triggerAttackRelease(note, duration, time); // Toca la nota
+    }, timeOffset);
+    timeOffset += 0.1; // Ajustar el tiempo entre notas
+  });
+
+  // Empezar la animación y la secuencia
+  Tone.Transport.start();
+
+  // Programar la detención después de 5 segundos
+  Tone.Transport.scheduleOnce(() => {
+    Tone.Transport.stop(); // Detener el transporte después del tiempo definido
+  }, "+5");
 }
