@@ -598,20 +598,23 @@ body {
   }
   
   .futuristic-btn {
-    background-color: #00ffcc;
-    color: #000;
-    padding: 12px 24px;
-    font-size: 18px;
-    font-family: 'Orbitron', sans-serif; /* Fuente futurista opcional */
+    background: linear-gradient(145deg, #ff4c4c, #ff0000); /* Degradado en tonos rojos para el botón de abandonar */
+    color: #fff;
+    padding: 12px 20px; /* Espaciado adecuado */
+    font-size: 16px;
+    font-family: 'Orbitron', sans-serif; /* Fuente futurista */
     border: none;
-    border-radius: 12px;
+    border-radius: 25px; /* Bordes redondeados */
     cursor: pointer;
-    box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffccaa;
-    transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px; /* Espaciado entre letras */
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3), 0 6px 20px rgba(255, 0, 0, 0.2); /* Sombras para dar profundidad */
+    transition: all 0.3s ease-in-out; /* Transiciones suaves */
     position: relative;
-    overflow: hidden;
+  }
+  
+  .futuristic-btn:hover {
+    background-color: #0056b3; /* Cambia el color al pasar el ratón */
   }
   
 
@@ -842,8 +845,7 @@ body {
 }
 
 
-  
-/* Estilos ventas con efecto neón */
+  /* Estilos ventas con efecto neón */
 .shop-box {
   background: radial-gradient(circle at top left, #1a1a2e, #0f0f1a);
   color: white;
@@ -897,7 +899,7 @@ body {
 }
 
 /* Estilo responsivo para pantallas pequeñas (iPhone, etc.) */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .shop-box {
     max-width: 90%;
     left: 5%;
@@ -913,8 +915,76 @@ body {
   .shop-box button {
     font-size: 14px;
     padding: 6px 10px;
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
+/* Estilo responsivo para pantallas medianas (iPhone 6, 7, 8) */
+@media (max-width: 768px) {
+  .shop-box {
+    max-width: 90%;
+    left: 5%;
+    bottom: 10px;
+    padding: 15px;
+    font-size: 14px;
+    min-height: 200px; /* O el valor que prefieras */
+  }
+
+  .shop-box-header {
+    font-size: 18px;
+  }
+
+  .shop-box button {
+    font-size: 14px;
+    padding: 6px 10px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+
+
+/* Estilo para pantallas extra pequeñas (dispositivos muy pequeños, como iPhone SE) */
+@media (max-width: 480px) {
+  .shop-box {
+    max-width: 95%;
+    left: 2.5%;
+    bottom: 5px;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .shop-box-header {
+    font-size: 16px;
+  }
+
+  .shop-box button {
+    font-size: 12px;
+    padding: 6px 10px;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+/* Ajustes específicos para dispositivos pequeños como iPhone SE */
+@media (max-width: 375px) {
+  .shop-box {
+    max-width: 90%;
+    padding: 10px;
+    bottom: 5px;
+    left: 5%;
+  }
+
+  .shop-box-header {
+    font-size: 14px;
+  }
+
+  .shop-box button {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+}
+
 
   
   .player-points {
@@ -1312,85 +1382,141 @@ body {
       box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
     }
   }
-  
   /* Responsividad para pantallas pequeñas */
-  @media (max-width: 768px) {
-    .grid-container {
-      grid-template-columns: repeat(4, 1fr); /* 4 columnas */
-    }
-  
-    .btn-para-mobiles {
-      display: none;
-    }
-  
-    .btn-para-mobiles {
-      display: block;
-      margin: 20px auto;
-    }
-  
-    .hidden {
-      display: none !important;
-    }
-    
-    .roulette {
-      width: 80%;
-      height: 300px;
-    }
-  
-    .balance-display {
-      font-size: 18px;
-      padding: 8px 20px;
-    }
-  
-    .futuristic-btn {
-      font-size: 14px;
-      padding: 10px 20px;
-    }
-  
-    .futuristic-btn-apuesta {
-      font-size: 12px;
-      padding: 10px;
-    }
-  
-    .shop-box {
-      width: 90%;
-      max-width: 350px;
-    }
-  
-    .symbols-store {
-      max-height: 250px;
-    }
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas */
   }
 
-
-  
-  
-  /* Responsividad para pantallas más pequeñas (móviles) */
-  @media (max-width: 480px) {
-    .grid-container {
-      grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-    }
-  
-    .roulette {
-      height: 250px;
-    }
-  
-    .futuristic-btn {
-      font-size: 12px;
-      padding: 8px 16px;
-    }
-  
-    .shop-box {
-      width: 100%;
-      max-width: 320px;
-    }
-  
-    .symbols-store {
-      max-height: 200px;
-    }
+  /* Botón para móviles, solo visible en pantallas pequeñas */
+  .btn-para-mobiles {
+    display: block;
+    margin: 20px auto;
   }
 
-  
-  
-  
-  
+  .hidden {
+    display: none !important;
+  }
+
+  .roulette {
+    width: 80%;
+    height: 300px;
+  }
+
+  .balance-display {
+    font-size: 18px;
+    padding: 8px 20px;
+  }
+
+  .futuristic-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .futuristic-btn-apuesta {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .shop-box {
+    width: 90%;
+    max-width: 350px;
+  }
+
+  .symbols-store {
+    max-height: 250px;
+  }
+}
+
+/* Responsividad para pantallas más pequeñas (móviles) */
+@media (max-width: 480px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  }
+
+  .roulette {
+    height: 250px;
+  }
+
+  .futuristic-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .shop-box {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .symbols-store {
+    max-height: 200px;
+  }
+}
+
+
+
+/* Estilo responsivo para pantallas medianas (iPhone 6, 7, 8) */
+@media (max-width: 768px) {
+  .shop-box {
+    max-width: 90%;
+    left: 5%;
+    bottom: 10px;
+    padding: 12px; /* Reduje el padding */
+    font-size: 12px; /* Reducí el tamaño del texto */
+    min-height: 180px; /* Ajusté el alto mínimo para que no ocupe mucho espacio */
+  }
+
+  .shop-box-header {
+    font-size: 16px; /* Reduje el tamaño de la cabecera */
+  }
+
+  .shop-box button {
+    font-size: 12px; /* Reduje el tamaño de los botones */
+    padding: 4px 8px; /* Reducí el padding para los botones */
+    width: 100%;
+    margin-bottom: 8px; /* Reducí el margen entre botones */
+  }
+}
+
+/* Estilo para pantallas extra pequeñas (dispositivos muy pequeños, como iPhone SE) */
+@media (max-width: 480px) {
+  .shop-box {
+    max-width: 95%;
+    left: 2.5%;
+    bottom: 5px;
+    padding: 10px; /* Reducí aún más el padding */
+    font-size: 11px; /* Reduje el tamaño de la fuente aún más */
+  }
+
+  .shop-box-header {
+    font-size: 14px; /* Hice la cabecera más pequeña */
+  }
+
+  .shop-box button {
+    font-size: 10px; /* Aún más pequeño */
+    padding: 4px 6px; /* Reduje aún más el padding */
+    width: 100%;
+    margin-bottom: 6px; /* Reducí el espacio entre botones */
+  }
+}
+
+/* Ajustes específicos para dispositivos pequeños como iPhone SE */
+@media (max-width: 375px) {
+  .shop-box {
+    max-width: 90%;
+    padding: 8px; /* Mucho más pequeño */
+    bottom: 5px;
+    left: 5%;
+  }
+
+  .shop-box-header {
+    font-size: 12px; /* Reducí aún más la cabecera */
+  }
+
+  .shop-box button {
+    font-size: 10px; /* Más pequeño */
+    padding: 3px 6px; /* Reducido aún más */
+  }
+}
+
+/* Botones con estilo */
