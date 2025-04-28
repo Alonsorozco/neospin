@@ -245,37 +245,10 @@
     <div style="text-align: center; margin-bottom: 10px;">
       <button class="btn btn-info btn-sobre-sorpresa " onclick="$('#inventoryModal').modal('show')">🎒 Tu Mochila</button>
     </div>
-
-    <div class="text-center mt-4 ">
-       <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#comprasimbolos">🛒 Compra Simbolos</button>
-    </div>
-   
-  
-    <div class="text-center mt-4 ">
-      <button class="btn btn-warning btn-sobre-venta" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
-    </div>
-
     <div class="text-center mt-4">
-      <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#symbolValueModal" onclick="loadSymbolValues()">
-        💸Valores de venta
-      </button>
-    </div>
-
+      <button class="btn btn-sobre-venta" data-bs-toggle="espicificamodal" data-bs-target="#gameStatsModal"onclick="$('#tiendafinal').modal('show')">🛒 Tienda</button>
+  </div>
     <div class="text-center mt-4">
-      <button class="btn btn-warning btn-sobre-venta" onclick="$('#espicificamodal').modal('show')">👑 Caracteristicas Simbolos </button>
-    </div>
-    <div class="text-center mt-4">
-        <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#slotModal">
-         🎰 Slot Machine
-        </button>
-    </div>
-    <div class="text-center mt-4 ">
-      <button class="btn btn-sobre-venta" onclick="buySymbolPack()">
-        🎁 Sobre sorpresa 1.500.000 Pts
-        </button>
-      </div>
-    <div class="text-center mt-4">
-    <!-- Botón para abrir el modal con el historial -->
         <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#gameStatsModal">🔢 Estadísticas</button>
     </div>
   
@@ -290,14 +263,6 @@
          🔇 Silenciar
        </button>
      </div>
-    <!-- Botón para abrir el modal -->
-
-  
-  
-    
-  
-
-
 </div>
 
    
@@ -428,7 +393,7 @@
 
         <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-      <div class="modal-body text-center">
+      <div class="modal-body text-center  justify-content-center">
         <div id="symbol-values" class="row"></div>
       </div>
 
@@ -450,7 +415,7 @@
           <h5 class="modal-title" id="symbolValueModalLabel">Caracteristicas de los Simbolos son 36 en total</h5>
           <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body ">
           <!-- Tienda de símbolos -->
           <div class="symbols-store">
             
@@ -777,6 +742,54 @@
         <button type="button" class="btn btn-cerrar mb-4" data-bs-dismiss="modal">Cerrar</button>
       </div>
       
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal: tienda -->
+<div class="modal fade" id="tiendafinal" tabindex="-1" aria-labelledby="espicificamodalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="espicificamodalLabel">Tienda</h5>
+        <button type="button" class="btn-cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="text-center mt-4 ">
+          <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#comprasimbolos">🛒 Compra Simbolos</button>
+       </div>
+      
+     
+       <div class="text-center mt-4 ">
+         <button class="btn btn-warning btn-sobre-venta" onclick="$('#ventaModal').modal('show')">💸 Vende símbolos</button>
+       </div>
+   
+       <div class="text-center mt-4">
+         <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#symbolValueModal" onclick="loadSymbolValues()">
+           💸Valores de venta
+         </button>
+       </div>
+   
+       <div class="text-center mt-4">
+         <button class="btn btn-warning btn-sobre-venta" onclick="$('#espicificamodal').modal('show')">👑 Caracteristicas Simbolos </button>
+       </div>
+       <div class="text-center mt-4">
+           <button class="btn btn-sobre-venta" data-bs-toggle="modal" data-bs-target="#slotModal">
+            🎰 Slot Machine
+           </button>
+       </div>
+       <div class="text-center mt-4 ">
+         <button class="btn btn-sobre-venta" onclick="buySymbolPack()">
+           🎁 Sobre sorpresa 1.500.000 Pts
+           </button>
+         </div>
+      </div>
+      <div class="modal-footer justify-content-center"">
+        <button type="button" class="btn  btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

@@ -59,13 +59,18 @@
 //MOSTRAR SÍMBOLOS Y VALORES
 const container = document.getElementById('symbol-values');
 const ul = document.createElement('ul');
+
 ul.style.maxHeight = '300px'; // altura máxima visible
 ul.style.overflowY = 'auto'; // permite scroll vertical
 ul.style.padding = '10px';
-ul.style.margin = '0';
+ul.style.margin = '0 auto'; // centrado horizontal
 ul.style.listStyle = 'none';
 ul.style.border = '1px solid #ccc';
-ul.style.width = '80%'; // Ancho aumentado, ajustable con porcentaje o píxeles
+ul.style.width = '50%'; // ancho ajustable
+ul.style.display = 'block'; // necesario para margin auto
+
+container.appendChild(ul);
+
 
 Object.entries(symbolValues).forEach(([symbol, value]) => {
   const li = document.createElement('li');
@@ -1951,3 +1956,15 @@ function playRandomScale() {
     Tone.Transport.stop(); // Detener el transporte después del tiempo definido
   }, "+5");
 }
+
+const otrosModales = ['#comprasimbolos', '#ventaModal', '#symbolValueModal', '#espicificamodal', '#slotModal'];
+
+otrosModales.forEach(function(modalId) {
+  const modalElement = document.querySelector(modalId);
+  if (modalElement) {
+    modalElement.addEventListener('show.bs.modal', function () {
+      const tiendaModal = bootstrap.Modal.getInstance(document.getElementById('tiendafinal')) || new bootstrap.Modal(document.getElementById('tiendafinal'));
+      tiendaModal.hide();
+    });
+  }
+});
